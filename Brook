@@ -1,8 +1,4 @@
--- ============================================================ --
---                  FR HUB - السكربت الكامل                    --
---              صنع احمد و تيم FR | الإصدار 2.0               --
---         المكتبة والواجهة مدمجة في ملف واحد                 --
--- ============================================================ --
+
 
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService = game:GetService("UserInputService")
@@ -1385,7 +1381,7 @@ local function GetColor(Instance)
 	return ""
 end
 
--- /////////// --
+
 function redzlib:GetIcon(index)
 	if type(index) ~= "string" or index:find("rbxassetid://") or #index == 0 then
 		return index
@@ -1678,7 +1674,8 @@ function redzlib:MakeWindow(Configs)
 		Name = "Containers"
 	})
 
-	-- ============ مطر الماتريكس داخل الواجهة ============
+
+	
 	local MatrixContainer = Create("Frame", Containers, {
 		Size = UDim2.new(1, 0, 1, 0),
 		BackgroundTransparency = 1,
@@ -2963,16 +2960,13 @@ end
 end
 
 
--- ============================================================
--- إضافة المتغيرات المطلوبة للواجهة
--- ============================================================
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace         = game:GetService("Workspace")
 local LocalPlayer       = Players.LocalPlayer
 
--- ============================================================
--- دالة مطر الماتريكس
--- ============================================================
+
+
 local function AddMatrixRain(parent, zIndex)
     zIndex = zIndex or 1
     local chars = {"0","1","F","R","H","U","B","8","3","7","A","Z","f","r","h"}
@@ -3007,9 +3001,8 @@ local function AddMatrixRain(parent, zIndex)
     return function() conn:Disconnect(); for _,c in pairs(cols) do for _,f in pairs(c.frames) do f:Destroy() end end end
 end
 
--- ============================================================
--- الانترو - مع صورة مبنية داخلياً بدل ImageLabel خارجي
--- ============================================================
+
+
 local function ShowIntro(onDone)
     local old=CoreGui:FindFirstChild("FR_HUB_Intro"); if old then old:Destroy() end
     local sg=Instance.new("ScreenGui"); sg.Name="FR_HUB_Intro"; sg.ResetOnSpawn=false; sg.DisplayOrder=100; sg.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; sg.Parent=CoreGui
@@ -3018,26 +3011,30 @@ local function ShowIntro(onDone)
     local stopRain=AddMatrixRain(bg,2)
     local dim=Instance.new("Frame"); dim.Size=UDim2.fromScale(1,1); dim.BackgroundColor3=Color3.fromRGB(0,0,0); dim.BackgroundTransparency=0.48; dim.BorderSizePixel=0; dim.ZIndex=3; dim.Parent=bg
 
-    -- ===== صورة الانترو (مبنية بـ GUI بدل صورة خارجية) =====
+
+    
     local logoHolder=Instance.new("Frame")
     logoHolder.Size=UDim2.new(0,520,0,200); logoHolder.Position=UDim2.new(0.5,-260,0.04,0)
     logoHolder.BackgroundTransparency=1; logoHolder.ZIndex=5; logoHolder.Parent=bg
 
-    -- إطار ديكوري - الخط العلوي
+    
+
     local topLine=Instance.new("Frame"); topLine.Size=UDim2.new(1,0,0,2); topLine.Position=UDim2.new(0,0,0,0)
     topLine.BackgroundColor3=Color3.fromRGB(0,230,70); topLine.BorderSizePixel=0; topLine.ZIndex=6; topLine.Parent=logoHolder
-    -- إطار ديكوري - الخط السفلي
+    
+
     local botLine=Instance.new("Frame"); botLine.Size=UDim2.new(1,0,0,2); botLine.Position=UDim2.new(0,0,1,-2)
     botLine.BackgroundColor3=Color3.fromRGB(0,230,70); botLine.BorderSizePixel=0; botLine.ZIndex=6; botLine.Parent=logoHolder
 
-    -- نص FR HUB
+    
     local titleLbl=Instance.new("TextLabel")
     titleLbl.Size=UDim2.new(1,0,0,90); titleLbl.Position=UDim2.new(0,0,0,10)
     titleLbl.BackgroundTransparency=1; titleLbl.Text="FR | HUB"
     titleLbl.TextColor3=Color3.fromRGB(0,255,80); titleLbl.TextSize=78
     titleLbl.Font=Enum.Font.GothamBlack; titleLbl.TextXAlignment=Enum.TextXAlignment.Center
     titleLbl.TextTransparency=1; titleLbl.ZIndex=7; titleLbl.Parent=logoHolder
-    -- ظل النص
+    
+
     local titleShadow=Instance.new("TextLabel")
     titleShadow.Size=UDim2.new(1,0,0,90); titleShadow.Position=UDim2.new(0,3,0,13)
     titleShadow.BackgroundTransparency=1; titleShadow.Text="FR | HUB"
@@ -3045,7 +3042,7 @@ local function ShowIntro(onDone)
     titleShadow.Font=Enum.Font.GothamBlack; titleShadow.TextXAlignment=Enum.TextXAlignment.Center
     titleShadow.TextTransparency=1; titleShadow.ZIndex=6; titleShadow.Parent=logoHolder
 
-    -- نص WELCOME TO SERVER
+    
     local subtitleBg=Instance.new("Frame")
     subtitleBg.Size=UDim2.new(1,-20,0,42); subtitleBg.Position=UDim2.new(0,10,0,105)
     subtitleBg.BackgroundColor3=Color3.fromRGB(0,15,0); subtitleBg.BackgroundTransparency=0.2
@@ -3053,12 +3050,13 @@ local function ShowIntro(onDone)
     Instance.new("UICorner",subtitleBg).CornerRadius=UDim.new(0,6)
     local stroke=Instance.new("UIStroke",subtitleBg); stroke.Color=Color3.fromRGB(0,200,60); stroke.Thickness=1.5; stroke.Transparency=0.5
 
-    -- أسهم ديكورية يسار
+    
+
     local arrowL=Instance.new("TextLabel"); arrowL.Size=UDim2.new(0,40,1,0); arrowL.Position=UDim2.new(0,5,0,0)
     arrowL.BackgroundTransparency=1; arrowL.Text="→"; arrowL.TextColor3=Color3.fromRGB(0,230,70)
     arrowL.TextSize=20; arrowL.Font=Enum.Font.GothamBold; arrowL.TextXAlignment=Enum.TextXAlignment.Left
     arrowL.TextTransparency=1; arrowL.ZIndex=7; arrowL.Parent=subtitleBg
-    -- أسهم ديكورية يمين
+    
     local arrowR=Instance.new("TextLabel"); arrowR.Size=UDim2.new(0,40,1,0); arrowR.Position=UDim2.new(1,-45,0,0)
     arrowR.BackgroundTransparency=1; arrowR.Text="←"; arrowR.TextColor3=Color3.fromRGB(0,230,70)
     arrowR.TextSize=20; arrowR.Font=Enum.Font.GothamBold; arrowR.TextXAlignment=Enum.TextXAlignment.Right
@@ -3071,7 +3069,7 @@ local function ShowIntro(onDone)
     subtitleLbl.Font=Enum.Font.GothamBold; subtitleLbl.TextXAlignment=Enum.TextXAlignment.Center
     subtitleLbl.TextTransparency=1; subtitleLbl.ZIndex=7; subtitleLbl.Parent=subtitleBg
 
-    -- خط الشريط السفلي
+    
     local line=Instance.new("Frame"); line.Size=UDim2.new(0,0,0,1); line.Position=UDim2.new(0.15,0,0.55,0); line.BackgroundColor3=Color3.fromRGB(0,230,70); line.BorderSizePixel=0; line.ZIndex=5; line.Parent=bg
     local numLbl=Instance.new("TextLabel"); numLbl.Size=UDim2.new(0,220,0,65); numLbl.Position=UDim2.new(0.5,-110,0.58,0); numLbl.BackgroundTransparency=1; numLbl.Text="0%"; numLbl.TextColor3=Color3.fromRGB(0,255,80); numLbl.TextSize=20; numLbl.Font=Enum.Font.GothamBold; numLbl.TextXAlignment=Enum.TextXAlignment.Center; numLbl.ZIndex=6; numLbl.Parent=bg
     local statusLbl=Instance.new("TextLabel"); statusLbl.Size=UDim2.new(0,300,0,22); statusLbl.Position=UDim2.new(0.5,-150,0.70,0); statusLbl.BackgroundTransparency=1; statusLbl.Text="جاري التحميل..."; statusLbl.TextColor3=Color3.fromRGB(100,230,100); statusLbl.TextSize=10; statusLbl.Font=Enum.Font.Gotham; statusLbl.TextXAlignment=Enum.TextXAlignment.Center; statusLbl.ZIndex=6; statusLbl.Parent=bg
@@ -3080,7 +3078,7 @@ local function ShowIntro(onDone)
     local glow=Instance.new("Frame"); glow.Size=UDim2.new(0,10,3,0); glow.AnchorPoint=Vector2.new(1,0.5); glow.Position=UDim2.new(1,0,0.5,0); glow.BackgroundColor3=Color3.fromRGB(180,255,180); glow.BackgroundTransparency=0.2; glow.BorderSizePixel=0; glow.ZIndex=8; glow.Parent=barFill; Instance.new("UICorner",glow).CornerRadius=UDim.new(0.5,0)
     local brandLbl=Instance.new("TextLabel"); brandLbl.Size=UDim2.new(1,0,0,18); brandLbl.Position=UDim2.new(0,0,0.90,0); brandLbl.BackgroundTransparency=1; brandLbl.Text="FR HUB  ·  صنع احمد و FR  "; brandLbl.TextColor3=Color3.fromRGB(0,170,50); brandLbl.TextSize=11; brandLbl.Font=Enum.Font.Gotham; brandLbl.TextXAlignment=Enum.TextXAlignment.Center; brandLbl.ZIndex=6; brandLbl.Parent=bg
 
-    -- أنيميشن الظهور
+    
     local fadeIn=TweenInfo.new(0.9,Enum.EasingStyle.Quint)
     TweenService:Create(titleLbl,fadeIn,{TextTransparency=0}):Play()
     TweenService:Create(titleShadow,fadeIn,{TextTransparency=0.6}):Play()
@@ -3091,7 +3089,7 @@ local function ShowIntro(onDone)
     end)
     task.delay(0.35,function() TweenService:Create(line,TweenInfo.new(0.65,Enum.EasingStyle.Quint),{Size=UDim2.new(0.7,0,0,1)}):Play() end)
 
-    -- نبض الأسهم
+    
     task.spawn(function()
         while sg and sg.Parent do
             TweenService:Create(arrowL,TweenInfo.new(0.5,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{TextTransparency=0.6}):Play()
@@ -3120,9 +3118,7 @@ local function ShowIntro(onDone)
     end)
 end
 
--- ============================================================
--- الواجهة الرئيسية
--- ============================================================
+
 local function BuildMainUI()
 
     local Window = redzlib:MakeWindow({ Name="FR HUB", SubTitle="صنع احمد  FR" })
@@ -3131,7 +3127,7 @@ local function BuildMainUI()
         redzlib:Notify({ title, text, dur or 3 })
     end
 
-    -- متغيرات عامة
+    
     local spyEnabled=false; local spyTarget=nil; local autoSpyEnabled=false
     local originalCameraSubject=nil; local bangEnabled=false; local faceSitEnabled=false
     local bangTarget=nil; local foundPlayer=nil
@@ -3143,14 +3139,12 @@ local function BuildMainUI()
         end)
     end
 
-    -- ================================================================
-    -- زر الإخفاء/الإظهار - قابل للسحب والتحريك
-    -- ================================================================
+
     local sgHUD=Instance.new("ScreenGui"); sgHUD.Name="FR_HUB_HUD"; sgHUD.ResetOnSpawn=false; sgHUD.DisplayOrder=50; sgHUD.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; sgHUD.Parent=CoreGui
 
     local rainbowOuter=Instance.new("Frame")
     rainbowOuter.Size=UDim2.new(0,164,0,52)
-    -- تحديد موضع ابتدائي بالوسط العلوي
+    
     rainbowOuter.Position=UDim2.new(0.5,-82,0,10)
     rainbowOuter.BackgroundColor3=Color3.fromRGB(0,200,80); rainbowOuter.BorderSizePixel=0; rainbowOuter.ZIndex=10; rainbowOuter.Active=true; rainbowOuter.Parent=sgHUD
     Instance.new("UICorner",rainbowOuter).CornerRadius=UDim.new(0,12)
@@ -3166,7 +3160,8 @@ local function BuildMainUI()
         if rbT>=1 then rbT=0; rbIdx=(rbIdx%#rbColors)+1; TweenService:Create(rainbowOuter,TweenInfo.new(0.55,Enum.EasingStyle.Linear),{BackgroundColor3=rbColors[rbIdx]}):Play() end
     end)
 
-    -- ===== السحب - مصلح ليشتغل صح =====
+
+    
     do
         local dragging=false; local dragStart=nil; local startPos=nil
 
@@ -3188,7 +3183,7 @@ local function BuildMainUI()
                 local newXOff=startPos.X.Offset+delta.X
                 local newY=startPos.Y.Scale
                 local newYOff=startPos.Y.Offset+delta.Y
-                -- منع الخروج من الشاشة
+                
                 local vp=Workspace.CurrentCamera.ViewportSize
                 newXOff=math.clamp(newXOff,-newX*vp.X, vp.X*(1-newX)-rainbowOuter.AbsoluteSize.X)
                 newYOff=math.clamp(newYOff,-newY*vp.Y, vp.Y*(1-newY)-rainbowOuter.AbsoluteSize.Y)
@@ -3215,9 +3210,7 @@ local function BuildMainUI()
     hudBtn.Activated:Connect(toggleHub)
     UserInputService.InputBegan:Connect(function(inp,gpe) if not gpe and inp.KeyCode==Enum.KeyCode.Insert then toggleHub() end end)
 
-    -- ================================================================
-    -- إنشاء التابات
-    -- ================================================================
+
     local InfoTab    = Window:MakeTab({Title="🏠 الرئيسية",   Icon="home"})
     local SamlaTab   = Window:MakeTab({Title="⚔️ الصمله",     Icon="swords"})
     local TrollTab   = Window:MakeTab({Title="🚌 التخريب",    Icon="car"})
@@ -3232,9 +3225,7 @@ local function BuildMainUI()
     local HackTab    = Window:MakeTab({Title="💻 الهاكات",    Icon="code"})
     local LocalTab   = Window:MakeTab({Title="🧑 اللاعب",     Icon="user"})
 
-    -- ================================================================
-    -- تاب الرئيسية
-    -- ================================================================
+
     InfoTab:AddParagraph({"مرحباً في FR HUB 💚","السكربت الخاص بالمطورين"})
     InfoTab:AddButton({
         Name="📋  زر الانفو",
@@ -3294,13 +3285,11 @@ local function BuildMainUI()
         end
     })
 
-    -- ================================================================
-    -- تاب الصمله
-    -- ================================================================
+
     local SamlaScripts={
         {"اافك2","https://raw.githubusercontent.com/FaresXForest/afk/refs/heads/main/SMLH200%23/smlh322%23/bestantiafk"},
         {"افك 3","https://raw.githubusercontent.com/FaresXForest/antiafk-by-flex-and-fares/refs/heads/main/faresxflex"},
-        {"صمله 4","https://raw.githubusercontent.com/FaresXForest/afk/refs/heads/main/SMLH200%23/smlh322%23/bestantiafk"},
+        {"منع طرد 4",".https://raw.githubusercontent.com/FaresXForest/Antikick/refs/heads/main/Kick"},
         {"صمله 5","https://pastebin.com/raw/x4ZqfXHr"},
     }
     SamlaTab:AddSection("اختر الصمله")
@@ -3312,9 +3301,7 @@ local function BuildMainUI()
         end})
     end
 
-    -- ================================================================
-    -- تاب التخريب
-    -- ================================================================
+
     TrollTab:AddSection("تخريب بالباص")
     local sabotageTarget
     TrollTab:AddDropdown({
@@ -3423,9 +3410,7 @@ local function BuildMainUI()
         end
     })
 
-    -- ================================================================
-    -- تاب المراقبة
-    -- ================================================================
+
     local spyTarget2
     SpyTab:AddSection("المراقبة الأساسية")
     SpyTab:AddDropdown({
@@ -3499,9 +3484,7 @@ local function BuildMainUI()
         else stopSpy() end
     end})
 
-    -- ================================================================
-    -- تاب السكنات
-    -- ================================================================
+
     local Remotes = ReplicatedStorage:WaitForChild("Remotes")
     local copyTarget = nil
 
@@ -3579,9 +3562,7 @@ local function BuildMainUI()
         copyAvatar(others[math.random(1,#others)])
     end})
 
-    -- ================================================================
-    -- تاب المتعة
-    -- ================================================================
+
     FunTab:AddDropdown({
         Name="اختيار الضحية",
         Options=(function() local t={}; for _,v in ipairs(Players:GetPlayers()) do if v~=LocalPlayer then table.insert(t,v.Name) end end; return t end)(),
@@ -3635,9 +3616,6 @@ local function BuildMainUI()
         end)
     end)
 
-    -- ================================================================
-    -- تاب الفلنق
-    -- ================================================================
     FlingTab:AddButton({
         Name="اخذ الكنبة",
         Callback=function()
@@ -3715,9 +3693,7 @@ local function BuildMainUI()
         end
     })
 
-    -- ================================================================
-    -- تاب الحماية
-    -- ================================================================
+
     ProtectTab:AddParagraph({"حماية من الجلوس","يمنع اللاعبين من اجلاسك"})
     local seatEnabled=false; local seats={}
     ProtectTab:AddToggle({Name="حماية جلوس",Default=false,Callback=function(state)
@@ -3741,9 +3717,7 @@ local function BuildMainUI()
         Notify("الحماية","جاري التحميل...",3); pcall(function() loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-FE-Fling-GUI-10927"))() end)
     end})
 
-    -- ================================================================
-    -- تاب القتل
-    -- ================================================================
+
     local killTarget=nil
     KillTab:AddParagraph({"قتل بالسفينة","يركب السفينة ويقتل اللاعب"})
     KillTab:AddDropdown({
@@ -3803,9 +3777,7 @@ local function BuildMainUI()
         end) end)
     end})
 
-    -- ================================================================
-    -- تاب الأغاني
-    -- ================================================================
+
     local function playMusic(soundId)
         pcall(function()
             local args1={[1]="SkateBoard"}
@@ -3862,9 +3834,7 @@ local function BuildMainUI()
         MusicTab:AddButton({Name=name,Callback=function() playMusic(id); Notify("💎",name,2) end})
     end
 
-    -- ================================================================
-    -- تاب التنقل
-    -- ================================================================
+
     local TeleportLocations={
         {Name="مكان النجمة {الترند}",CFrame=CFrame.new(-6,-133,12)},
         {Name="النافورة بالبداية",CFrame=CFrame.new(-26,19,14)},
@@ -3891,9 +3861,7 @@ local function BuildMainUI()
         end})
     end
 
-    -- ================================================================
-    -- تاب الهاكات
-    -- ================================================================
+
     local function safeLoad(urlOrCode,isRawCode)
         local ok,err=pcall(function()
             if isRawCode then loadstring(urlOrCode)()
@@ -3906,9 +3874,7 @@ local function BuildMainUI()
     HackTab:AddButton({Name="فيلكس",Callback=function() safeLoad("https://pastebin.com/raw/mw4AqAs8") end})
     HackTab:AddButton({Name="Synapse X",Callback=function() safeLoad("https://raw.githubusercontent.com/AR3AB/AR3AB/main/README.md") end})
 
-    -- ================================================================
-    -- تاب اللاعب المحلي
-    -- ================================================================
+
     LocalTab:AddSection("معلومات اللاعب")
     LocalTab:AddParagraph({"👤 الاسم",LocalPlayer.Name})
     LocalTab:AddParagraph({"🏷️ الاسم المعروض",LocalPlayer.DisplayName})
@@ -3938,7 +3904,6 @@ local function BuildMainUI()
 
 end
 
--- ============================================================
 ShowIntro(function()
     task.wait(0.2)
     BuildMainUI()
