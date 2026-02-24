@@ -3122,6 +3122,74 @@ end
 local function BuildMainUI()
 
     local Window = redzlib:MakeWindow({ Name="FR HUB", SubTitle="صنع احمد  FR" })
+    
+
+
+    
+    local isRainbowActive = false 
+    local rainbowNameLoop 
+    local customRainbowText = "" 
+
+
+    
+    local rainbowList = {
+        {text = "FR HUB", color = Color3.fromRGB(255, 0, 0)},
+        {text = "FR HUB", color = Color3.fromRGB(255, 165, 0)},
+        {text = "FR HUB", color = Color3.fromRGB(255, 255, 0)},
+        {text = "FR HUB", color = Color3.fromRGB(0, 255, 0)},
+        {text = "FR HUB", color = Color3.fromRGB(0, 255, 255)},
+        {text = "FR HUB", color = Color3.fromRGB(0, 0, 255)},
+        {text = "FR HUB", color = Color3.fromRGB(128, 0, 128)}
+    }
+
+    
+
+    local function toggleRainbowName(state)
+        isRainbowActive = state 
+
+        if isRainbowActive then
+           
+            if rainbowNameLoop then task.cancel(rainbowNameLoop) end
+            
+            local currentIndex = 1
+            rainbowNameLoop = task.spawn(function()
+            
+
+                
+                while isRainbowActive do 
+
+              
+                    pcall(function()
+                        local currentItem = rainbowList[currentIndex]
+                        local textToSend = (customRainbowText ~= "") and customRainbowText or currentItem.text
+
+                        local argsName = {"RolePlayName", textToSend}
+                        ReplicatedStorage.RE["1RPNam1eTex1t"]:FireServer(unpack(argsName))
+                        
+                        local argsColor = {"PickingRPNameColor", currentItem.color}
+                        ReplicatedStorage.RE["1RPNam1eColo1r"]:FireServer(unpack(argsColor))
+
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #rainbowList then
+                            currentIndex = 1
+                        end
+                    end)
+                    task.wait(1)
+                end
+            end)
+            Notify("اسم رينبو", "تم تفعيل اسم الرينبو !", 3)
+        else
+            
+            if rainbowNameLoop then
+                task.cancel(rainbowNameLoop)
+                rainbowNameLoop = nil
+            end
+            Notify("اسم رينبو", "تم إيقاف اسم الرينبو.", 3)
+        end
+    end
+
+
+
 
     local function Notify(title, text, dur)
         redzlib:Notify({ title, text, dur or 3 })
@@ -3212,6 +3280,42 @@ local function BuildMainUI()
 
 
     local InfoTab    = Window:MakeTab({Title="🏠 الرئيسية",   Icon="home"})
+    -- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+-- أضف هذا الكود في نهاية تعريفات InfoTab
+-- =================================================================================
+
+    -- إضافة قسم جديد لميزة اسم الرينبو
+    InfoTab:AddSection("🎭 اسم فوق الراس رينبو")
+
+    -- إضافة صندوق نص لتغيير نص الرينبو
+    InfoTab:AddTextBox({
+        Name = "اكتب نص الرينبو (اختياري)",
+        PlaceholderText = "اتركه فارغًا لاستخدام النصوص الافتراضية",
+        Callback = function(text)
+            -- قم بتحديث متغير النص عندما يكتب المستخدم
+            customRainbowText = text
+            if text ~= "" then
+                Notify("اسم رينبو", "تم تحديث النص المخصص إلى: " .. text, 2)
+            else
+                Notify("اسم رينبو", "تم العودة إلى النصوص الافتراضية", 2)
+            end
+        end
+    })
+
+    -- إضافة زر لتفعيل وإيقاف تأثير الرينبو
+    InfoTab:AddToggle({
+        Name = "🌈 تفعيل اسم رينبو",
+        Default = false, -- يبدأ مطفأ
+        Callback = function(value)
+            -- استدعاء الدالة التي كتبناها في الخطوة 1
+            toggleRainbowName(value)
+        end
+    })
+
+-- =================================================================================
+-- انتهى الكود الذي يجب إضافته
+-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
     local SamlaTab   = Window:MakeTab({Title="⚔️ الصمله",     Icon="swords"})
     local TrollTab   = Window:MakeTab({Title="🚌 التخريب",    Icon="car"})
     local SpyTab     = Window:MakeTab({Title="👁️ المراقبة",   Icon="eye"})
@@ -3602,6 +3706,16 @@ end)
             Notify("سكربتات فارس", "تم تشغيل طياران السيارات", 3)
         end
     })
+
+FaresTab:AddButton({
+     Name=" سكربت طياران من صنع فارس FLY", 
+     Callback=function()
+     loadstring(game:HttpGet("https://raw.githubusercontent.com/ook314745-svg/fly/refs/heads/main/fly"))()
+     
+     Notify("سكربتات فارس", "تم تشغيل طياران FLY", 3)
+        end
+    })
+
 
     FaresTab:AddButton({
         Name="شادر من صنع فارس",
