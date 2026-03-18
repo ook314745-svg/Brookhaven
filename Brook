@@ -3659,7 +3659,7 @@ for i, info in ipairs(ButtonsInfo) do
     end)
 end
 
--- Fly Logic
+
 local flying = false
 local BV,BG
 
@@ -4539,7 +4539,7 @@ end)
     end
 
 
-    TrollTab:AddSection("تخريب بالباص")
+    TrollTab:AddSection("تخريب بالباص لازم تحط الباص بنفسك الاول و تركب الباص! ")
     local sabotageTarget
     TrollTab:AddDropdown({
         Name="اختيار لاعب",
@@ -4956,7 +4956,7 @@ end)
 
 
     local killTarget=nil
-    KillTab:AddParagraph({"قتل بالسفينة","يركب السفينة ويقتل اللاعب"})
+    KillTab:AddParagraph({"قتل بالسفينة"," يركب السفينة ويقتل اللاعب و لو حبيت توقف الفتل اضغط مره اخرى علي الزر "})
     KillTab:AddDropdown({
         Name="اختيار ضحية القتل",
         Options=(function() local t={}; for _,v in ipairs(Players:GetPlayers()) do if v~=LocalPlayer then table.insert(t,v.Name) end end; return t end)(),
@@ -5013,6 +5013,78 @@ end)
             Notify("القتل","تم تنفيذ القتل!",3)
         end) end)
     end})
+    local continuousKill = false
+
+KillTab:AddButton({
+    Name="قتل مستمر بالسفينة (كامل)",
+    Callback=function()
+        if not killTarget then 
+            Notify("خطأ","اختار الضحية الاول!",3) 
+            return 
+        end
+
+        continuousKill = not continuousKill
+
+        if not continuousKill then
+            Notify("القتل","تم ايقاف القتل المستمر",3)
+            return
+        end
+
+        Notify("القتل","تشغيل القتل المستمر...",3)
+
+        task.spawn(function()
+            while continuousKill do
+                pcall(function()
+                    local player=Players.LocalPlayer
+                    local character=player.Character or player.CharacterAdded:Wait()
+                    local humanoid=character:WaitForChild("Humanoid")
+                    local humanoidRootPart=character:WaitForChild("HumanoidRootPart")
+
+                    
+                    local vehicle=workspace.Vehicles:FindFirstChild(player.Name.."Car")
+                    if not vehicle then
+                        humanoidRootPart.CFrame=CFrame.new(634.18,-4.00,1839.65)
+                        task.wait(0.5)
+
+                        local args={"PickingBoat","MilitaryBoatFree"}
+                        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+
+                        task.wait(1)
+                        vehicle=workspace.Vehicles:FindFirstChild(player.Name.."Car")
+                    end
+
+                    
+                    if vehicle then
+                        local vehicleSeat=vehicle:FindFirstChild("VehicleSeat") or (vehicle:FindFirstChild("Body") and vehicle.Body:FindFirstChild("VehicleSeat"))
+                        if vehicleSeat and humanoid.SeatPart~=vehicleSeat then
+                            humanoidRootPart.CFrame=vehicleSeat.CFrame*CFrame.new(0,2,0)
+                            task.wait(0.2)
+                            firetouchinterest(humanoidRootPart,vehicleSeat,0)
+                            firetouchinterest(humanoidRootPart,vehicleSeat,1)
+                            task.wait(0.5)
+                        end
+                    end
+
+              
+                    local targetPlayer=Players:FindFirstChild(killTarget)
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        local targetPos=targetPlayer.Character.HumanoidRootPart.Position
+                        local vehicle=workspace.Vehicles:FindFirstChild(player.Name.."Car")
+
+                        if vehicle then
+                            vehicle:SetPrimaryPartCFrame(CFrame.new(targetPos + Vector3.new(0,-2,0)))
+
+                            local offset=Vector3.new(math.random(-6,6),math.random(-2,2),math.random(-6,6))
+                            vehicle:SetPrimaryPartCFrame(CFrame.new(targetPos + offset))
+                        end
+                    end
+                end)
+
+                task.wait(0.05)
+            end
+        end)
+    end
+})
 
 
     local function playMusic(soundId)
@@ -5203,3 +5275,5 @@ ShowIntro(function()
 
 
 end)
+
+
