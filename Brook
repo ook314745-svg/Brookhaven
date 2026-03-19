@@ -3280,19 +3280,20 @@ local function BuildMainUI()
 
 
     local InfoTab    = Window:MakeTab({Title="🏠 الرئيسية",   Icon="home"})
-    -- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
--- أضف هذا الكود في نهاية تعريفات InfoTab
--- =================================================================================
 
-    -- إضافة قسم جديد لميزة اسم الرينبو
+
+
     InfoTab:AddSection("🎭 اسم فوق الراس رينبو")
 
-    -- إضافة صندوق نص لتغيير نص الرينبو
+
+    
     InfoTab:AddTextBox({
         Name = "اكتب نص الرينبو (اختياري)",
         PlaceholderText = "اتركه فارغًا لاستخدام النصوص الافتراضية",
         Callback = function(text)
-            -- قم بتحديث متغير النص عندما يكتب المستخدم
+        
+
+            
             customRainbowText = text
             if text ~= "" then
                 Notify("اسم رينبو", "تم تحديث النص المخصص إلى: " .. text, 2)
@@ -3302,19 +3303,20 @@ local function BuildMainUI()
         end
     })
 
-    -- إضافة زر لتفعيل وإيقاف تأثير الرينبو
+
+
     InfoTab:AddToggle({
         Name = "🌈 تفعيل اسم رينبو",
-        Default = false, -- يبدأ مطفأ
+        Default = false, 
         Callback = function(value)
-            -- استدعاء الدالة التي كتبناها في الخطوة 1
+        
+
+            
             toggleRainbowName(value)
         end
     })
 
--- =================================================================================
--- انتهى الكود الذي يجب إضافته
--- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
     local SamlaTab   = Window:MakeTab({Title="⚔️ الصمله",     Icon="swords"})
     local TrollTab   = Window:MakeTab({Title="🚌 التخريب",    Icon="car"})
@@ -3328,6 +3330,10 @@ local function BuildMainUI()
     local TeleTab    = Window:MakeTab({Title="🌀 التنقل",     Icon="navigation"})
     local HackTab    = Window:MakeTab({Title="💻 الهاكات",    Icon="code"})
     local LocalTab   = Window:MakeTab({Title="🧑 اللاعب",     Icon="user"})
+
+    local LagServerTab = Window:MakeTab({Title="⚠️ لاق سيرفر", Icon="alert-triangle"})
+local CarTab = Window:MakeTab({Title="🚗 السيارات", Icon="car"})
+
 
     
     local FaresTab   = Window:MakeTab({Title="⭐ سكربتات فارس", Icon="star"})
@@ -3637,7 +3643,7 @@ local ButtonsInfo = {
 }
 
 local btns = {}
-local activeBtns = {} -- track pressed buttons
+local activeBtns = {} 
 
 for i, info in ipairs(ButtonsInfo) do
     local btn = Instance.new("TextButton", Main)
@@ -3740,7 +3746,7 @@ local shaderEnabled = false
 local foliageConnection = nil  
 local motionBlurConnection = nil  
 
--- Deep copy function
+
 local function deepcopy(orig)  
     if type(orig) ~= 'table' then return orig end  
     local copy = {}  
@@ -4475,7 +4481,7 @@ end)
         end
     })
     InfoTab:AddSection("معلومات السكربت")
-    InfoTab:AddParagraph({"الإصدار","FR HUB v2.0  |  by احمد &  FR"})
+    InfoTab:AddParagraph({"الإصدار","FR HUB v3.0  |  by احمد &  FR"})
     InfoTab:AddSection("بطاقة اللاعب")
     local uid   = tostring(LocalPlayer.UserId)
     local uname = LocalPlayer.Name
@@ -5211,69 +5217,1351 @@ KillTab:AddButton({
         Notify("القفز",val and "تم تفعيل القفز العالي!" or "تم ايقاف القفز العالي!",2)
     end})
 
+
+
+    
+    LagServerTab:AddSection("شخصية منورة (تسحب جوالات وتسبب لاق لازم تروح متجر الهواتف و تختار الهواتف )")
+    
+    local lagPhoneEnabled = false
+    LagServerTab:AddToggle({
+        Name = "💡 سوي شخصيه منوره (Lag Phone)",
+        Default = false,
+        Callback = function(state)
+            lagPhoneEnabled = state
+            if state then
+                Notify("لاق سيرفر", "تم تفعيل الشخصية المنورة، جاري سحب الهواتف...", 3)
+                task.spawn(function()
+                    local iphone = workspace:FindFirstChild("WorkspaceCom")
+                        and workspace.WorkspaceCom:FindFirstChild("001_CommercialStores")
+                        and workspace.WorkspaceCom["001_CommercialStores"]:FindFirstChild("CommercialStorage1")
+                        and workspace.WorkspaceCom["001_CommercialStores"].CommercialStorage1:FindFirstChild("Store")
+                        and workspace.WorkspaceCom["001_CommercialStores"].CommercialStorage1.Store:FindFirstChild("Tools")
+                        and workspace.WorkspaceCom["001_CommercialStores"].CommercialStorage1.Store.Tools:FindFirstChild("Iphone")
+                    
+                    if iphone then
+                        local clickDet = iphone:FindFirstChildWhichIsA("ClickDetector")
+                        while lagPhoneEnabled and clickDet do
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = iphone.CFrame
+                            fireclickdetector(clickDet)
+                            task.wait(0.01)
+                        end
+                    else
+                        Notify("لاق سيرفر", "لم يتم العثور على الهاتف في الماب!  روح متجر الهواتف فعله", 3)
+                    end
+                end)
+            else
+                Notify("لاق سيرفر", "تم إيقاف الشخصية المنورة.", 3)
+            end
+        end
+    })
+
+    CarTab:AddSection("إعدادات التحكم بالسيارة")
+    
+    CarTab:AddTextBox({
+        Name = "تعديل سرعة السيارة (0 - 200)",
+        Default = "",
+        PlaceholderText = "اكتب السرعة هنا...",
+        Callback = function(val)
+            local speedNum = tonumber(val)
+            local myCar = workspace.Vehicles:FindFirstChild(game.Players.LocalPlayer.Name .. "Car")
+            if myCar and speedNum and speedNum >= 0 and speedNum <= 500 then
+                myCar.Body.VehicleSeat.TopSpeed.Value = speedNum
+                Notify("السيارة", "تم تعديل السرعة إلى: " .. speedNum, 3)
+            else
+                Notify("خطأ", "يجب أن تكون راكب السيارة والسرعة بين 0 و 500!", 3)
+            end
+        end
+    })
+
+    CarTab:AddSection("خصائص وإزعاج (تخريب السيارات)")
+
+    local rainbowCar = false
+    CarTab:AddToggle({
+        Name = "🌈 سيارة رينبو (تغير ألوان تلقائي)",
+        Default = false,
+        Callback = function(state)
+            rainbowCar = state
+            if state then
+                task.spawn(function()
+                    local colors = {
+                        Color3.new(1, 0, 0), Color3.new(0, 1, 0), Color3.new(0, 0, 1), 
+                        Color3.new(1, 1, 0), Color3.new(1, 0, 1), Color3.new(0, 1, 1), 
+                        Color3.new(0.5, 0, 0.5), Color3.new(1, 0.5, 0)
+                    }
+                    local carRemote = game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Player1sCa1r")
+                    while rainbowCar do
+                        for _, color in ipairs(colors) do
+                            if not rainbowCar then break end
+                            pcall(function() carRemote:FireServer("PickingCarColor", color) end)
+                            task.wait(1)
+                        end
+                    end
+                end)
+                Notify("السيارة", "تم تفعيل سيارة رينبو!", 3)
+            end
+        end
+    })
+
+    local spamHorn = false
+    CarTab:AddToggle({
+        Name = "🔊 إزعاج بوري (سبام بوري)",
+        Default = false,
+        Callback = function(state)
+            spamHorn = state
+            if state then
+                task.spawn(function()
+                    local carRemote = game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Player1sCa1r")
+                    while spamHorn do
+                        pcall(function() carRemote:FireServer("Horn") end)
+                        task.wait(0.1)
+                    end
+                end)
+                Notify("السيارة", "تم تفعيل سبام البوري!", 3)
+            end
+        end
+    })
+
+    local spamCars = false
+    local carList = {
+        "SchoolBus", "SmartCar", "FarmTruck", "Cadillac", "Excavator", 
+        "Jeep", "NascarTruck", "TowTruck", "Snowplow", "MilitaryTruck", 
+        "Tank", "Limo", "FireTruck"
+    }
+    CarTab:AddToggle({
+        Name = "🚙 سبام ترسبين سيارات متتالية",
+        Default = false,
+        Callback = function(state)
+            spamCars = state
+            if state then
+                task.spawn(function()
+                    local spawnRemote = game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r")
+                    while spamCars do
+                        for _, carName in ipairs(carList) do
+                            if not spamCars then break end
+                            pcall(function() spawnRemote:FireServer("PickingCar", carName) end)
+                            task.wait(0.4)
+                        end
+                    end
+                end)
+                Notify("السيارة", "تم تفعيل سبام ترسبين السيارات!", 3)
+            end
+        end
+    })
+
+
+
+
+
+
+
+    
+    local SkinsNewTab = Window:MakeTab({Title="👗 السكنات الجاهزة", Icon="shirt"})
+
+    SkinsNewTab:AddSection("نسخ سكنات اللاعبين نسخة ضعيفه احتياطيه")
+
+    local _skinReplicatedStorage = game:GetService("ReplicatedStorage")
+    local _skinPlayers = game:GetService("Players")
+    local _skinStarterGui = game:GetService("StarterGui")
+    local _skinWear = _skinReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Wear")
+    local _skinChangeBody = _skinReplicatedStorage:WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody")
+
+    local function skinNotify(title, text)
+        _skinStarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 3})
+    end
+
+    local _selectedSkinPlayer = nil
+
+    SkinsNewTab:AddDropdown({
+        Name = "اختار اللاعب لنسخ سكنه",
+        Options = (function()
+            local list = {}
+            for _, p in ipairs(_skinPlayers:GetPlayers()) do
+                if p ~= _skinPlayers.LocalPlayer then table.insert(list, p.Name) end
+            end
+            return list
+        end)(),
+        Callback = function(val) _selectedSkinPlayer = val end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "نسخ السكن بالكامل",
+        Callback = function()
+            if not _selectedSkinPlayer then skinNotify("خطأ", "يجب اختيار لاعب أولاً"); return end
+            local target = _skinPlayers:FindFirstChild(_selectedSkinPlayer)
+            if not target or not target.Character then return end
+            skinNotify("جاري النسخ", "جاري نسخ سكن " .. target.Name)
+            task.spawn(function()
+                local humanoid = target.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local desc = humanoid:GetAppliedDescription()
+                    pcall(function() _skinChangeBody:InvokeServer({desc.Torso, desc.RightArm, desc.LeftArm, desc.RightLeg, desc.LeftLeg, desc.Head}) end)
+                    task.wait(0.3)
+                    for _, id in ipairs({desc.Shirt, desc.Pants, desc.GraphicTShirt}) do
+                        if id and id ~= 0 then pcall(function() _skinWear:InvokeServer(id) end); task.wait(0.2) end
+                    end
+                    local accs = {desc.HatAccessory, desc.HairAccessory, desc.FaceAccessory, desc.NeckAccessory, desc.ShouldersAccessory, desc.FrontAccessory, desc.BackAccessory, desc.WaistAccessory}
+                    for _, acc in ipairs(accs) do
+                        if acc and acc ~= "" then
+                            for id in string.gmatch(acc, "%d+") do
+                                pcall(function() _skinWear:InvokeServer(tonumber(id)) end); task.wait(0.2)
+                            end
+                        end
+                    end
+                end
+                skinNotify("تم النسخ", "تم نسخ سكن " .. target.Name .. " بنجاح")
+            end)
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "تحديث قائمة اللاعبين",
+        Callback = function()
+            skinNotify("السكنات", "تم تحديث القائمة")
+        end
+    })
+
+    SkinsNewTab:AddSection("سكنات بنات جاهزة اي سكن سوف يتم اختياره بياخذ وقت عشان يتنفذ")
+
+    SkinsNewTab:AddButton({
+        Name = "سكن بنت وردي اسطوري",
+        Callback = function()
+            _skinChangeBody:InvokeServer({96491916349570, 76683091425509, 75159926897589, 1, 1, 3210773801})
+            wait(0.1)
+            for _, id in ipairs({11548626866, 123748362986025, 18934304175, 13059933311, 95247705739438, 76664743826864, 13900309877, 2936950534, 6342660648, 13463290106, 15512432661, 18373570570, 129320162248328, 100379240828527, 133328016919894, 71470323738552, 16030963309, 11720626030, 7886117616, 14388009243, 14388006902}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن بنت وردي اسطوري")
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "سكن بنت احمر يشكك",
+        Callback = function()
+            _skinChangeBody:InvokeServer({96491916349570, 76683091425509, 75159926897589, 1, 1, 3210773801})
+            wait(0.1)
+            for _, id in ipairs({6396704357, 14135973372, 103411971588163, 14953307814, 14758885890, 76664743826864, 15512432661, 18373570570, 123748362986025, 95247705739438, 13059933311, 15278499342, 11548626866, 18934304175, 13463290106, 14388001192, 14388019333}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن بنت احمر يشكك")
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "سكن بنت اسود يشكك",
+        Callback = function()
+            _skinChangeBody:InvokeServer({96491916349570, 76683091425509, 75159926897589, 1, 1, 3210773801})
+            wait(0.1)
+            for _, id in ipairs({11548626866, 123748362986025, 18934304175, 13059933311, 95247705739438, 76664743826864, 13900309877, 2936950534, 6342660648, 13463290106, 15512432661, 18373570570, 129320162248328, 100379240828527, 133328016919894, 71470323738552, 16030963309, 11720626030, 7886117616, 14388009243, 14388006902}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن بنت اسود يشكك")
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "سكن بنت رقم 1",
+        Callback = function()
+            _skinChangeBody:InvokeServer({96491916349570, 76683091425509, 75159926897589, 1, 1, 3210773801})
+            wait(0.1)
+            for _, id in ipairs({17462585534, 17529187838, 13059925879, 13797056492, 17744851762, 10714603421, 140098985957900, 6657507028, 13412319846, 11539811223, 115942071538305, 16030963309, 8491999465}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            skinNotify("السكنات", "تم تطبيق سكن بنت رقم 1")
+        end
+    })
+
+    SkinsNewTab:AddSection("سكنات أولاد جاهزة")
+
+    SkinsNewTab:AddButton({
+        Name = "سكن ولد لون احمر يشك",
+        Callback = function()
+            _skinChangeBody:InvokeServer({4637265517, 1, 1, 1, 1, 1})
+            wait(0.1)
+            for _, id in ipairs({3210773801, 11386778657, 15696510459, 15294007958, 16127867077, 12553878346, 15360967485, 12410997561, 14388001192, 14388019333, 13463285148, 15209194774, 73122104376331, 12418813921, 16079104171}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن ولد لون احمر يشك")
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "سكن ولد ابيض",
+        Callback = function()
+            _skinChangeBody:InvokeServer({4637265517, 1, 1, 1, 1, 1})
+            wait(0.1)
+            for _, id in ipairs({3210773801, 15066901505, 6438419573, 11300257519, 12395782823, 15530780426, 14388004031, 12411004315, 12553870762, 15848173823, 16127870253, 14808889186, 130269607301022, 14887721871, 18154424333, 17039389777, 15145469178, 13463285148, 14388009243}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن ولد ابيض")
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "سكن ولد هيلو كيتي يشكك",
+        Callback = function()
+            _skinChangeBody:InvokeServer({4637265517, 1, 1, 1, 1, 1})
+            wait(0.1)
+            for _, id in ipairs({3210773801, 106701020164834, 14388001192, 14388019333, 13463285148, 15209194774, 73122104376331, 12418813921, 16079104171, 12553878346, 15360967485, 12410997561, 15530780426, 14887721871, 12411004315, 12553870762, 15848173823, 16127870253, 17374012310, 15530780426, 12395782823}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Institutional white") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن ولد هيلو كيتي")
+        end
+    })
+
+    SkinsNewTab:AddButton({
+        Name = "سكن ولد اسود يشكك",
+        Callback = function()
+            _skinChangeBody:InvokeServer({4637265517, 1, 1, 1, 1, 1})
+            wait(0.1)
+            for _, id in ipairs({3210773801, 15066901505, 6438419573, 11300257519, 12395782823, 15530780426, 14388004031, 12411004315, 12553870762, 15848173823, 16127870253, 14808889186, 130269607301022, 14887721871, 18154424333, 17039389777, 15145469178, 13463285148, 14388009243}) do
+                pcall(function() _skinWear:InvokeServer(id) end); wait(0.1)
+            end
+            pcall(function() _skinWear:InvokeServer("skintone", "Really black") end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            skinNotify("السكنات", "تم تطبيق سكن ولد اسود يشكك")
+        end
+    })
+
+
+    
+    local HairTab = Window:MakeTab({Title="💇 الشعور", Icon="scissors"})
+
+    HairTab:AddSection("شعور عادية")
+
+    local _hairWear = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear")
+
+    HairTab:AddButton({
+        Name = "دمج عادي اسود",
+        Callback = function()
+            for _, id in ipairs({15535076528, 16127830905, 14808924884, 15848163279}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج عادي اسود", 3)
+        end
+    })
+
+    HairTab:AddButton({
+        Name = "دمج عادي بني",
+        Callback = function()
+            for _, id in ipairs({14627143022, 15294036713, 15847969469, 15971158257}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج عادي بني", 3)
+        end
+    })
+
+    HairTab:AddButton({
+        Name = "دمج عادي ابيض",
+        Callback = function()
+            for _, id in ipairs({14627127264, 15908583844, 14808889186, 15349539978}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج عادي ابيض", 3)
+        end
+    })
+
+    HairTab:AddSection("دمج (9) شعور حلو")
+
+    HairTab:AddButton({
+        Name = "دمج اسود 9 شعور (نوع 1)",
+        Callback = function()
+            for _, id in ipairs({89963641541698, 15214479618, 16168983297, 12553856439, 12411026610, 15848163279, 15294026484, 11386780095, 15303551954}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج اسود 9 شعور نوع 1", 3)
+        end
+    })
+
+    HairTab:AddButton({
+        Name = "دمج ابيض 9 شعور",
+        Callback = function()
+            for _, id in ipairs({12395782823, 15530780426, 14808889186, 16127870253, 15848173823, 12553870762, 12411004315, 14887721871}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج ابيض 9 شعور", 3)
+        end
+    })
+
+    HairTab:AddButton({
+        Name = "دمج اسود 9 شعور (نوع 2)",
+        Callback = function()
+            for _, id in ipairs({15908581067, 12410997561, 15360967485, 12553878346, 16127867077, 15294007958, 15696510459, 11386778657}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج اسود 9 شعور نوع 2", 3)
+        end
+    })
+
+    HairTab:AddButton({
+        Name = "دمج اسود 9 شعور نوع ثاني",
+        Callback = function()
+            for _, id in ipairs({89963641541698, 15214479618, 12411026610, 16168983297, 15848163279, 12553856439, 16752451901, 15303551954, 11386780095}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج اسود 9 شعور نوع ثاني", 3)
+        end
+    })
+
+    HairTab:AddButton({
+        Name = "دمج اشقر 9 شعور نوع ثاني",
+        Callback = function()
+            for _, id in ipairs({14887721871, 12411004315, 12553870762, 15848173823, 16127870253, 17374012310, 15530780426, 12395782823}) do
+                pcall(function() _hairWear:InvokeServer(id) end); wait(0.1)
+            end
+            Notify("الشعور", "تم تطبيق دمج اشقر 9 شعور نوع ثاني", 3)
+        end
+    })
+
+
+    local WalkTab = Window:MakeTab({Title="🚶 المشيات", Icon="footprints"})
+
+
+    
+    local _walkWearRemote = nil
+    pcall(function()
+        _walkWearRemote = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear")
+    end)
+
+    local function applyWalkStyle(name, ids)
+        if _walkWearRemote then
+            for _, id in ipairs(ids) do
+                pcall(function() _walkWearRemote:InvokeServer(id) end)
+                task.wait(0.2)
+            end
+            Notify("المشيات", "تم تطبيق " .. name, 3)
+        else
+            Notify("المشيات", "الريموت غير متوفر - لم يتم التطبيق", 3)
+        end
+    end
+
+    WalkTab:AddSection("المشيات المدمجة")
+
+    WalkTab:AddButton({
+        Name = "مشية الجديده",
+        Callback = function()
+            applyWalkStyle("مشية الجديده", {101279640971758, 103190462987721, 75036746190467, 138641066989023, 72106690305021, 104741822987331, 112231179705221})
+        end
+    })
+
+    WalkTab:AddButton({
+        Name = "مشية البنات الدلوعين",
+        Callback = function()
+            applyWalkStyle("مشية البنات الدلوعين", {133304526526319, 136276875045281, 101839542383818, 130373407996664, 83937116921114})
+        end
+    })
+    
+    WalkTab:AddButton({
+    Name = "Popular Animation",
+    Callback = function()
+        applyWalkStyle("Popular Animation", {133304526526319, 136276875045281, 101839542383818, 130373407996664, 83937116921114, 135810009801094})
+    end
+})
+WalkTab:AddButton({
+    Name = "adidas Community",
+    Callback = function()
+        applyWalkStyle("adidas Community", {123695349157584, 93993406355955, 106810508343012, 106537993816942, 126354114956642, 124765145869332, 115715495289805})
+    end
+})
+WalkTab:AddButton({
+    Name = "Zombie Animation",
+    Callback = function()
+        applyWalkStyle("Zombie Animation", {619535091, 619535616, 619535834, 619536283, 619536621, 619537096, 619537468})
+    end
+})
+WalkTab:AddButton({
+    Name = "No Boundaries",
+    Callback = function()
+        applyWalkStyle("No Boundaries", {18755919175, 18755922352, 18755930927, 18755925411, 18755933883, 18755938274, 18755942776})
+    end
+})
+WalkTab:AddButton({
+    Name = "adidas Aura",
+    Callback = function()
+        applyWalkStyle("adidas Aura", {140398319728398, 99457463463495, 129527230938281, 123973978164540, 73137983344853, 119007025452432, 75183215343859})
+    end
+})
+
+    WalkTab:AddSection("قريبا")
+
+    local _walkAnimations = {
+        {name = "Confident", id = 14105718498}
+    }
+
+    for _, walkData in ipairs(_walkAnimations) do
+        WalkTab:AddButton({
+            Name = "تطبيق " .. walkData.name,
+            Callback = function()
+                if _walkWearRemote then
+                    pcall(function() _walkWearRemote:InvokeServer(walkData.id) end)
+                    Notify("المشيات", "تم تطبيق " .. walkData.name, 3)
+                else
+                    Notify("المشيات", "الريموت غير متوفر - لم يتم التطبيق", 3)
+                end
+            end
+        })
+    end
+
+
+
+    
+    local BodiesTab = Window:MakeTab({Title="💪 الأجسام", Icon="user"})
+
+    BodiesTab:AddSection("الرؤوس")
+
+    BodiesTab:AddButton({
+        Name = "رأس روبوت",
+        Callback = function()
+            pcall(function() _skinWear:InvokeServer(3210773801) end)
+            Notify("الأجسام", "تم تطبيق رأس روبوت", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "رأس مخفي",
+        Callback = function()
+            pcall(function() _skinWear:InvokeServer(134082579) end)
+            Notify("الأجسام", "تم تطبيق رأس مخفي", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "رأس كوبي رول",
+        Callback = function()
+            pcall(function() _skinWear:InvokeServer(746767604) end)
+            Notify("الأجسام", "تم تطبيق رأس كوبي رول", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "رأس عيون زرقاء",
+        Callback = function()
+            pcall(function() _skinWear:InvokeServer(16580493236) end)
+            Notify("الأجسام", "تم تطبيق رأس عيون زرقاء", 3)
+        end
+    })
+
+    BodiesTab:AddSection("رجول")
+
+    BodiesTab:AddButton({
+        Name = "رجل مقطوعه للبنات",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({96491916349570, 76683091425509, 75159926897589, 139607718, 1, 1}) end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            Notify("الأجسام", "تم تطبيق جل مقطوعه للبنات", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "رجل مقطوعه للولد",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({1, 1, 1, 139607718, 1, 1}) end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            Notify("الأجسام", "تم تطبيق جل مقطوعه للولد", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جل حديدية",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({1, 1, 1, 17500249989, 1, 1}) end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            Notify("الأجسام", "تم تطبيق جل حديدية", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جل العضام البيضاء",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({1, 1, 1, 14580308646, 1, 1}) end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            Notify("الأجسام", "تم تطبيق جل العضام البيضاء", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جل العضام الاسود",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({1, 1, 1, 14547162578, 1, 1}) end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            Notify("الأجسام", "تم تطبيق جل العضام الاسود", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جل رول",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({1, 1, 1, 3230472745, 3230470862, 1}) end)
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            Notify("الأجسام", "تم تطبيق جل رول", 3)
+        end
+    })
+
+    BodiesTab:AddSection("جسام بنات")
+
+    BodiesTab:AddButton({
+        Name = "جسم بنت خصر صغير",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({96491916349570, 76683091425509, 75159926897589, 1, 1, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم بنت خصر صغير", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم بنت خصر ضعيف",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({74302534603111, 76683091425509, 75159926897589, 1, 1, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم بنت خصر ضعيف", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم بنت 1",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({96491916349570, 14854350570, 14854350451, 1, 1, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم بنت 1", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم بنت 2",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({16214246112, 16214249513, 16214251181, 1, 1, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم بنت 2", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم بنت 3",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({15539008532, 15539008875, 15539008680, 15539008795, 15539011945, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم بنت 3", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم بنت 4",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({14861800638, 14861800626, 14861801452, 14861800627, 14861801454, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم بنت 4", 3)
+        end
+    })
+
+    BodiesTab:AddSection("جسام أولاد")
+
+    BodiesTab:AddButton({
+        Name = "جسم اولاد s15",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({17754346388, 1, 1, 1, 1, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم اولاد s15", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم ولد ضعيف",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({92757812011061, 99519402284266, 115905570886697, 1, 1, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم ولد ضعيف", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم ولد كوبي",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({86499666, 27112039, 27112052, 27112068, 27112056, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم ولد كوبي", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم ولد رول",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({27112025, 27112039, 27112052, 3230472745, 3230470862, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم ولد رول", 3)
+        end
+    })
+
+    BodiesTab:AddButton({
+        Name = "جسم ولد معضل",
+        Callback = function()
+            pcall(function() _skinChangeBody:InvokeServer({18178775358, 18178775182, 18178775725, 18178777453, 18178775695, 1}) end)
+            Notify("الأجسام", "تم تطبيق جسم ولد معضل", 3)
+        end
+    })
+
+local ShoesTab = Window:MakeTab({Title="الشعور المفرده", Icon="rbxassetid://10709770005"})
+
+    ShoesTab:AddSection("الشعور")
+
+    local function applyShoe(id)
+        pcall(function()
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(id)
+        end)
+    end
+
+    ShoesTab:AddButton({
+        Name = "شعر ابيض",
+        Callback = function()
+            applyShoe(14887721871)
+            applyShoe(12411004315)
+           
+        end
+    })
+
+    ShoesTab:AddButton({
+        Name = "شعر اضفر",
+        Callback = function()
+            applyShoe(12553878346)
+            applyShoe(12410997561)
+            
+        end
+    })
+
+    ShoesTab:AddButton({
+        Name = "شعر ابيض",
+        Callback = function()
+            applyShoe(15848173823)
+            applyShoe(16127870253)
+
+        end
+    })
+
+    ShoesTab:AddSection("شعور صغيره")
+
+    ShoesTab:AddButton({
+        Name = "شعر ابيض",
+        Callback = function()
+            applyShoe(12395782823)
+            applyShoe(15530780426)
+
+        end
+    })
+
+    ShoesTab:AddButton({
+        Name = "شعر اصفر",
+        Callback = function()
+            applyShoe(15360967485)
+            applyShoe(12553870762)
+
+        end
+    })
+
+    ShoesTab:AddSection("اخرى")
+
+    ShoesTab:AddButton({
+        Name = "شعر طويل",
+        Callback = function()
+            applyShoe(17374012310)
+
+        end
+    })
+
+local ClothesTab = Window:MakeTab({Title="قفازات احذيه اكسسورات", Icon="rbxassetid://10709770005"})
+
+ClothesTab:AddSection("القفازات و الاحذاء و الجواكت و البناطيل")
+
+local function applyCloth(id)
+    pcall(function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(id)
+    end)
 end
+
+ClothesTab:AddSection("بنطلونات وجواكت")
+
+ClothesTab:AddButton({
+    Name = "Stylish Black Baggy Tracksuits",
+    Callback = function()
+        applyCloth(107221904954874)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Jeans V2",
+    Callback = function()
+        applyCloth(112454834612260)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Techwear Cargo Pants",
+    Callback = function()
+        applyCloth(96794685714412)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Vreem Pants",
+    Callback = function()
+        applyCloth(112594990825399)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Sombras Eternas Baggy Pants",
+    Callback = function()
+        applyCloth(117838134428691)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Winter Puffer Jacket Oversized White",
+    Callback = function()
+        applyCloth(88783214514469)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Mist Jacket",
+    Callback = function()
+        applyCloth(122719124930652)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Half Zipped Hoodie",
+    Callback = function()
+        applyCloth(15940853754)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Skeleton lord armor",
+    Callback = function()
+        applyCloth(93278248992466)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Oversized Hoodie Trouble",
+    Callback = function()
+        applyCloth(106090934540462)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Itachi Akatsuki Cloak Cloth",
+    Callback = function()
+        applyCloth(136368017656281)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Cozy Black Off Shoulder Oversized Sweater",
+    Callback = function()
+        applyCloth(130434596380794)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Kitty Hoodie Blood Moon",
+    Callback = function()
+        applyCloth(17180797610)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "M11 Denim Tears Baggy Jeans w BTimb boots",
+    Callback = function()
+        applyCloth(80130946298976)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Cowboy Hat",
+    Callback = function()
+        applyCloth(136319978479924)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Hoodie with Ski Mask",
+    Callback = function()
+        applyCloth(104616157421329)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "OVERSIZED SWEATPANTS WITH SHOES BLACK",
+    Callback = function()
+        applyCloth(76732287946982)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Baggy Black Cargo Pants",
+    Callback = function()
+        applyCloth(17150164752)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "ardor pocket hoodie posed black",
+    Callback = function()
+        applyCloth(136644276218918)
+    end
+})
+
+ClothesTab:AddSection("قفازات")
+
+ClothesTab:AddButton({
+    Name = "Arm Warmers",
+    Callback = function()
+        applyCloth(15067049853)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Arm Bandages 1 0",
+    Callback = function()
+        applyCloth(11458078735)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "arm warmers",
+    Callback = function()
+        applyCloth(131121414947252)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "arm warmers white",
+    Callback = function()
+        applyCloth(97829974476105)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Soft Arm Warmers",
+    Callback = function()
+        applyCloth(127615078780728)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Soft Cute Arm Warmers Black",
+    Callback = function()
+        applyCloth(135434816004939)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Fluffy Black Arm Warmers",
+    Callback = function()
+        applyCloth(82238278079335)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Fluffy White Arm Warmers",
+    Callback = function()
+        applyCloth(101195600518397)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "arm warmers stripes pink",
+    Callback = function()
+        applyCloth(127660160388632)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Soft Cute Arm Warmers White",
+    Callback = function()
+        applyCloth(117376025257191)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Striped Soft Arm Warmers White and Blue",
+    Callback = function()
+        applyCloth(99377372278154)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Elegant Soft Knitted Arm Warmers Black White",
+    Callback = function()
+        applyCloth(123914683450496)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Ruffle Puff Sleeves Pink",
+    Callback = function()
+        applyCloth(123308678256639)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Chunky Arm Warmers Brown",
+    Callback = function()
+        applyCloth(12695832467)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Soft Cute Arm Warmers Pink",
+    Callback = function()
+        applyCloth(122617357139921)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Pink Black Arm Warmers",
+    Callback = function()
+        applyCloth(88032676489700)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "knit arm warmers ruffles bows black 3 0",
+    Callback = function()
+        applyCloth(90273913517078)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Elegant Y2K Soft Knitted Arm Warmers Brown",
+    Callback = function()
+        applyCloth(124283431304208)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Fluffy Fur Arm Warmers Black",
+    Callback = function()
+        applyCloth(108419684685496)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Fluffy Fur Arm Warmers White",
+    Callback = function()
+        applyCloth(138738275605160)
+    end
+})
+
+ClothesTab:AddSection("أحذية لو ظهرلك واحد بس اضغط كثير لين يظبط و يصيرو ثنين")
+
+ClothesTab:AddButton({
+    Name = "Black Dragon Slip",
+    Callback = function()
+        applyShoe(89524972171987)
+        applyShoe(92968654348874)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Pink Clogs",
+    Callback = function()
+        applyShoe(94030632422160)
+        applyShoe(115638255253489)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Pink White Doll Platform",
+    Callback = function()
+        applyShoe(74491506064548)
+        applyShoe(135413659493158)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "White Pink Platform",
+    Callback = function()
+        applyShoe(135034469381328)
+        applyShoe(83156441762403)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Doll Platform Shoes Blue",
+    Callback = function()
+        applyShoe(115424815034586)
+        applyShoe(108062115921680)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "3 0 Doll Platform Shoes Black",
+    Callback = function()
+        applyShoe(109595347373590)
+        applyShoe(119382054765049)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Doll Platform Shoes Grey",
+    Callback = function()
+        applyShoe(130722064765967)
+        applyShoe(71070604063101)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Doll Platform Y2K",
+    Callback = function()
+        applyShoe(74037010708471)
+        applyShoe(125726120623179)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "White Striped Doll Platform",
+    Callback = function()
+        applyShoe(106046366971070)
+        applyShoe(90508166126568)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Platform Shoes Witch Purple",
+    Callback = function()
+        applyShoe(96521609141325)
+        applyShoe(106822197281881)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "White Chunky Fur Boots",
+    Callback = function()
+        applyShoe(91169884777902)
+        applyShoe(116031506278213)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Dark Red Chunky Fur Boots",
+    Callback = function()
+        applyShoe(120100858917215)
+        applyShoe(123907242443219)
+    end
+})
+
+ClothesTab:AddButton({
+    Name = "Black Fur Knee Hi",
+    Callback = function()
+        applyShoe(92049667813517)
+        applyShoe(103816844022637)
+    end
+})
+
+
+
+
+    local HousesTab = Window:MakeTab({Title="🏠 البيوت", Icon="home"})
+
+    
+
+    HousesTab:AddSection("نقل للبيوت (إحداثيات كاملة)")
+
+    local _houseTeleportData = {
+        ["بيت رقم 1"] = Vector3.new(260.29, 4.37, 209.32),
+        ["بيت رقم 2"] = Vector3.new(234.49, 4.37, 228),
+        ["بيت رقم 3"] = Vector3.new(262.79, 21.37, 210.84),
+        ["بيت رقم 4"] = Vector3.new(229.6, 21.37, 225.4),
+        ["بيت رقم 5"] = Vector3.new(173.44, 21.37, 228.11),
+        ["بيت رقم 6"] = Vector3.new(-43, 21, -137),
+        ["بيت رقم 7"] = Vector3.new(-40, 36, -137),
+        ["بيت رقم 11"] = Vector3.new(-21, 40, 436),
+        ["بيت رقم 12"] = Vector3.new(155, 37, 433),
+        ["بيت رقم 13"] = Vector3.new(255, 35, 431),
+        ["بيت رقم 14"] = Vector3.new(254, 38, 394),
+        ["بيت رقم 15"] = Vector3.new(148, 39, 387),
+        ["بيت رقم 16"] = Vector3.new(-17, 42, 395),
+        ["بيت رقم 17"] = Vector3.new(-189, 37, -247),
+        ["بيت رقم 18"] = Vector3.new(-354, 37, -244),
+        ["بيت رقم 19"] = Vector3.new(-456, 36, -245),
+        ["بيت رقم 20"] = Vector3.new(-453, 38, -295),
+        ["بيت رقم 21"] = Vector3.new(-356, 38, -294),
+        ["بيت رقم 22"] = Vector3.new(-187, 37, -295),
+        ["بيت رقم 23"] = Vector3.new(-410, 68, -447),
+        ["بيت رقم 24"] = Vector3.new(-348, 69, -496),
+        ["بيت رقم 28"] = Vector3.new(-103, 12, 1087),
+        ["بيت رقم 29"] = Vector3.new(-730, 6, 808),
+        ["بيت رقم 30"] = Vector3.new(-245, 7, 822),
+        ["بيت رقم 31"] = Vector3.new(639, 76, -361),
+        ["بيت رقم 32"] = Vector3.new(-908, 6, -361),
+        ["بيت رقم 33"] = Vector3.new(-111, 70, -417),
+        ["بيت رقم 34"] = Vector3.new(230, 38, 569),
+        ["بيت رقم 35"] = Vector3.new(-30, 13, 2209)
+    }
+
+    local _houseOptions = {}
+    for k, _ in pairs(_houseTeleportData) do
+        table.insert(_houseOptions, k)
+    end
+    table.sort(_houseOptions, function(a, b)
+        return (tonumber(a:match("%d+")) or 0) < (tonumber(b:match("%d+")) or 0)
+    end)
+
+    HousesTab:AddDropdown({
+        Name = "نقل للبيوت",
+        Options = _houseOptions,
+        Callback = function(val)
+            local lp = game.Players.LocalPlayer
+            if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
+                lp.Character.HumanoidRootPart.CFrame = CFrame.new(_houseTeleportData[val])
+                Notify("البيوت", "تم النقل إلى " .. val, 3)
+            end
+        end
+    })
+
+    HousesTab:AddSection("نقل لخزنة البيوت المحجوزة")
+
+    local _safeHouseOwner = nil
+
+    local function getHouseOwnersList()
+        local list = {}
+        for _, lot in pairs(workspace["001_Lots"]:GetChildren()) do
+            if string.find(lot.Name, "House") and lot:FindFirstChild("HousePickedByPlayer") then
+                local ownerName = lot:FindFirstChild("Owner") and lot.Owner.Value or "Unknown"
+                local num = lot:FindFirstChild("Number") and lot.Number:FindFirstChild("Number") and lot.Number.Number.Value or "?"
+                table.insert(list, ownerName .. "-" .. tostring(num))
+            end
+        end
+        return list
+    end
+
+    local SafeDropdown = HousesTab:AddDropdown({
+        Name = "اختر صاحب البيت للخزنة",
+        Options = getHouseOwnersList(),
+        Callback = function(val)
+            if val and val ~= "" then
+                local split = string.split(val, "-")
+                _safeHouseOwner = tostring(split[1])
+            end
+        end
+    })
+
+    HousesTab:AddButton({
+        Name = "تحديث قائمة البيوت المحجوزة",
+        Callback = function()
+            SafeDropdown:Set(getHouseOwnersList())
+            Notify("البيوت", "تم تحديث قائمة أصحاب البيوت", 3)
+        end
+    })
+
+    HousesTab:AddButton({
+        Name = "انتقال إلى الخزنة",
+        Callback = function()
+            if not _safeHouseOwner then
+                Notify("البيوت", "اختر بيت من القائمة أولاً", 3)
+                return
+            end
+            pcall(function()
+                local house = workspace["001_Lots"]:FindFirstChild(_safeHouseOwner .. "House")
+                if house then
+                    local picked = house:FindFirstChild("HousePickedByPlayer")
+                    if picked then
+                        local model = picked:FindFirstChild("HouseModel")
+                        if model then
+                            local safe = model:FindFirstChild("001_Safe")
+                            if safe then
+                                local btn = safe:FindFirstChild("OpenSafeDoorButton")
+                                if btn then
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(btn.Position)
+                                    Notify("البيوت", "تم النقل للخزنة بنجاح!", 3)
+                                    return
+                                end
+                            end
+                        end
+                    end
+                end
+                Notify("البيوت", "لم يتم العثور على الخزنة لهذا البيت!", 3)
+            end)
+        end
+    })
+
+    HousesTab:AddSection("فك الباند عن البيوت")
+
+    local _isUnbanActive = false
+    HousesTab:AddToggle({
+        Name = "ازالة الحظر من كل البيوت (تلقائي/اوتو)",
+        Default = false,
+        Callback = function(state)
+            _isUnbanActive = state
+            if state then
+                Notify("البيوت", "تم تفعيل ازالة الحظر التلقائي", 3)
+                task.spawn(function()
+                    while _isUnbanActive do
+                        for i = 1, 35 do
+                            if not _isUnbanActive then break end
+                            pcall(function()
+                                game:GetService("ReplicatedStorage").RE:FindFirstChild("1Playe1rTrigge1rEven1t"):FireServer("GivePermissionLoopToServer", game:GetService("Players").LocalPlayer, i)
+                            end)
+                            task.wait(0.1)
+                        end
+                        task.wait(1)
+                    end
+                end)
+            else
+                Notify("البيوت", "تم إيقاف ازالة الحظر التلقائي", 3)
+            end
+        end
+    })
+
+
+
+
+local function SafeAutoName()
+    local RS = game:GetService("ReplicatedStorage")
+    
+    local RE = RS:WaitForChild("RE", 15)
+    
+    if RE then
+        local nameEvent = RE:WaitForChild("1RPNam1eTex1t", 5)
+        local colorEvent = RE:WaitForChild("1RPNam1eColo1r", 5)
+        
+        if nameEvent and colorEvent then
+            pcall(function()
+                nameEvent:FireServer("RolePlayName", "FR HUB IS HERE")
+                
+                colorEvent:FireServer("PickingRPNameColor", Color3.fromRGB(170, 0, 255))
+            end)
+            return true
+        end
+    end
+    return false
+end
+
 
 ShowIntro(function()
     task.wait(0.2)
     BuildMainUI()
 
-        
 
-    
+
     task.spawn(function()
         local success = false
         local attempts = 0
-        local maxAttempts = 15
 
         
-        if not LocalPlayer.Character then
-            LocalPlayer.CharacterAdded:Wait()
-        end
-        task.wait(1) 
-
-        
-        while not success and attempts < maxAttempts do
+        while not success and attempts < 10 do
             attempts = attempts + 1
-            
-            
-            local nameSet, colorSet = pcall(function()
-                local argsName = {"RolePlayName", "FR HUB IS HERE"}
-                game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(argsName))
-                
-                local argsColor = {"PickingRPNameColor", Color3.new(0, 0.78, 0.23)} 
-                game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(argsColor))
-            end)
-
-            
-            task.wait(0.5)
-
-            
-            pcall(function()
-                local playerBag = LocalPlayer:FindFirstChild("PlayersBag")
-                if playerBag and playerBag:FindFirstChild("RPName") and playerBag.RPName.Value == "FR HUB IS HERE" then
-                    success = true 
-                end
-            end)
-
-            
-            
-            if not success then
-                task.wait(1)
-            end
+            success = SafeAutoName()
+            if not success then task.wait(3) end
         end
-
         
         if success then
-            Notify("RP Name", "تم التحميل بنجاح", 3) 
-
-           
-        else
-            Notify("RP Name", "فشل التحميل تلقائيًا", 3) 
-
+            Notify("FR HUB", "تم تفعيل الاسم واللون بنجاح!", 3)
         end
     end)
-
-
 end)
 
 
