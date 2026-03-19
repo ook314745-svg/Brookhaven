@@ -6519,10 +6519,14 @@ ClothesTab:AddButton({
 
 
 
+    
+end 
+
+
 local function SafeAutoName()
     local RS = game:GetService("ReplicatedStorage")
     
-    local RE = RS:WaitForChild("RE", 15)
+    local RE = RS:WaitForChild("RE", 15) 
     
     if RE then
         local nameEvent = RE:WaitForChild("1RPNam1eTex1t", 5)
@@ -6531,7 +6535,7 @@ local function SafeAutoName()
         if nameEvent and colorEvent then
             pcall(function()
                 nameEvent:FireServer("RolePlayName", "FR HUB IS HERE")
-                
+ 
                 colorEvent:FireServer("PickingRPNameColor", Color3.fromRGB(170, 0, 255))
             end)
             return true
@@ -6546,12 +6550,10 @@ ShowIntro(function()
     BuildMainUI()
 
 
-
     task.spawn(function()
         local success = false
         local attempts = 0
 
-        
         while not success and attempts < 10 do
             attempts = attempts + 1
             success = SafeAutoName()
@@ -6563,5 +6565,3 @@ ShowIntro(function()
         end
     end)
 end)
-
-
