@@ -3076,7 +3076,7 @@ local function ShowIntro(onDone)
     local barBG=Instance.new("Frame"); barBG.Size=UDim2.new(0.6,0,0,5); barBG.Position=UDim2.new(0.2,0,0.80,0); barBG.BackgroundColor3=Color3.fromRGB(15,35,15); barBG.BorderSizePixel=0; barBG.ZIndex=6; barBG.Parent=bg; Instance.new("UICorner",barBG).CornerRadius=UDim.new(1,0)
     local barFill=Instance.new("Frame"); barFill.Size=UDim2.new(0,0,1,0); barFill.BackgroundColor3=Color3.fromRGB(0,220,65); barFill.BorderSizePixel=0; barFill.ZIndex=7; barFill.Parent=barBG; Instance.new("UICorner",barFill).CornerRadius=UDim.new(1,0)
     local glow=Instance.new("Frame"); glow.Size=UDim2.new(0,10,3,0); glow.AnchorPoint=Vector2.new(1,0.5); glow.Position=UDim2.new(1,0,0.5,0); glow.BackgroundColor3=Color3.fromRGB(180,255,180); glow.BackgroundTransparency=0.2; glow.BorderSizePixel=0; glow.ZIndex=8; glow.Parent=barFill; Instance.new("UICorner",glow).CornerRadius=UDim.new(0.5,0)
-    local brandLbl=Instance.new("TextLabel"); brandLbl.Size=UDim2.new(1,0,0,18); brandLbl.Position=UDim2.new(0,0,0.90,0); brandLbl.BackgroundTransparency=1; brandLbl.Text="FR HUB  ·  صنع احمد و FR  "; brandLbl.TextColor3=Color3.fromRGB(0,170,50); brandLbl.TextSize=11; brandLbl.Font=Enum.Font.Gotham; brandLbl.TextXAlignment=Enum.TextXAlignment.Center; brandLbl.ZIndex=6; brandLbl.Parent=bg
+    local brandLbl=Instance.new("TextLabel"); brandLbl.Size=UDim2.new(1,0,0,18); brandLbl.Position=UDim2.new(0,0,0.90,0); brandLbl.BackgroundTransparency=1; brandLbl.Text="FR HUB  ·  صنع احمد و فارس و FR  "; brandLbl.TextColor3=Color3.fromRGB(0,170,50); brandLbl.TextSize=11; brandLbl.Font=Enum.Font.Gotham; brandLbl.TextXAlignment=Enum.TextXAlignment.Center; brandLbl.ZIndex=6; brandLbl.Parent=bg
 
     
     local fadeIn=TweenInfo.new(0.9,Enum.EasingStyle.Quint)
@@ -3121,7 +3121,7 @@ end
 
 local function BuildMainUI()
 
-    local Window = redzlib:MakeWindow({ Name="FR HUB", SubTitle="صنع احمد  FR" })
+    local Window = redzlib:MakeWindow({ Name="FR HUB", SubTitle="صنع احمد و فارس FR" })
     
 
 
@@ -3319,20 +3319,433 @@ local function BuildMainUI()
 
 
     local SamlaTab   = Window:MakeTab({Title="⚔️ الصمله",     Icon="swords"})
-    local TrollTab   = Window:MakeTab({Title="🚌 التخريب",    Icon="car"})
+    local TrollTab   = Window:MakeTab({Title="🔥التخريب (جديد!)",    Icon="server"})
+
+
+TrollTab:AddSection({"تخريب السماء با انواع راءعه"})
+
+local skyboxEnabled = false
+local skyboxTrack = nil
+local rigidTrack = nil
+local savedNukeBody = {}
+
+local function stopAllAnimations()
+    if rigidTrack then
+        pcall(function()
+            rigidTrack:Stop()
+            rigidTrack:Destroy()
+        end)
+        rigidTrack = nil
+    end
+    
+    if skyboxTrack then
+        pcall(function()
+            skyboxTrack:Stop()
+            skyboxTrack:Destroy()
+        end)
+        skyboxTrack = nil
+    end
+    
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            local animator = humanoid:FindFirstChild("Animator")
+            if animator then
+                for _, track in pairs(animator:GetPlayingAnimationTracks()) do
+                    if track.Animation then
+                        local animId = track.Animation.AnimationId
+                        if animId == "rbxassetid://70883871260184" or animId == "rbxassetid://3695333486" then
+                            pcall(function()
+                                track:Stop()
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+TrollTab:AddToggle({
+    Name = "تخريب السماء العادي",
+    Default = false,
+    Callback = function(value)
+        skyboxEnabled = value
+        
+        if value then
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    savedNukeBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    skyboxTrack = humanoid:LoadAnimation(newAnim)
+                    skyboxTrack.Priority = Enum.AnimationPriority.Action4
+                    skyboxTrack:Play(0.1, 1, 0.01)
+                    
+                    task.wait(0.5)
+                    
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    rigidTrack = humanoid:LoadAnimation(plankAnim)
+                    rigidTrack.Priority = Enum.AnimationPriority.Movement
+                    rigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else
+            stopAllAnimations()
+            
+            task.wait(0.2)
+            
+            if next(savedNukeBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeBody.Torso,
+                            [2] = savedNukeBody.RightArm,
+                            [3] = savedNukeBody.LeftArm,
+                            [4] = savedNukeBody.RightLeg,
+                            [5] = savedNukeBody.LeftLeg,
+                            [6] = savedNukeBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
+
+local nukeFlashEnabled = false
+local nukeFlashTrack = nil
+local flashRigidTrack = nil
+local savedNukeFlashBody = {}
+
+local function stopFlashAnimations()
+    if flashRigidTrack then
+        pcall(function()
+            flashRigidTrack:Stop()
+            flashRigidTrack:Destroy()
+        end)
+        flashRigidTrack = nil
+    end
+    
+    if nukeFlashTrack then
+        pcall(function()
+            nukeFlashTrack:Stop()
+            nukeFlashTrack:Destroy()
+        end)
+        nukeFlashTrack = nil
+    end
+end
+
+TrollTab:AddToggle({
+    Name = "تخريب السماء السريع",
+    Default = false,
+    Callback = function(value)
+        nukeFlashEnabled = value
+        
+        if value then
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    savedNukeFlashBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    nukeFlashTrack = humanoid:LoadAnimation(newAnim)
+                    nukeFlashTrack.Priority = Enum.AnimationPriority.Action4
+                    nukeFlashTrack:Play(0.1, 1, 1)
+                    
+                    task.wait(0.1)
+                    nukeFlashTrack:AdjustSpeed(5)
+                    
+                    task.wait(0.3)
+                    
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    flashRigidTrack = humanoid:LoadAnimation(plankAnim)
+                    flashRigidTrack.Priority = Enum.AnimationPriority.Movement
+                    flashRigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else
+            stopFlashAnimations()
+            
+            task.wait(0.2)
+            
+            if next(savedNukeFlashBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeFlashBody.Torso,
+                            [2] = savedNukeFlashBody.RightArm,
+                            [3] = savedNukeFlashBody.LeftArm,
+                            [4] = savedNukeFlashBody.RightLeg,
+                            [5] = savedNukeFlashBody.LeftLeg,
+                            [6] = savedNukeFlashBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeFlashBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
+
     local SpyTab     = Window:MakeTab({Title="👁️ المراقبة",   Icon="eye"})
-    local SkinTab    = Window:MakeTab({Title="👗 السكنات",    Icon="shirt"})
+    local SkinTab    = Window:MakeTab({Title="👗 السكنات (جديد!)",    Icon="shirt"})
+
+
+SkinTab:AddSection({"النار و الدخان"})
+
+
+SkinTab:AddDropdown({
+    Name = "الوان النار",
+    Description = "Select the Fire Color",
+    Options = {"White", "Orange", "Green", "Blue", "Purple", "Black"},
+    Default = "White",
+    Callback = function(Value)
+        _G.selectedFireColor = Value
+
+    end
+})
+
+SkinTab:AddButton({
+    Name = "اختار لون النار",
+    Callback = function()
+        local fireColors = {
+            ["White"] = {id = "18637074370", code = "030FireWhite"},
+            ["Orange"] = {id = "18637025451", code = "031FireOrange"},
+            ["Green"] = {id = "18637078598", code = "032FireGreen"},
+            ["Blue"] = {id = "18637076370", code = "033FireBlue"},
+            ["Purple"] = {id = "18637070174", code = "034FirePurple"},
+            ["Black"] = {id = "18637072603", code = "035FireBlack"}
+        }
+        
+        local selectedColor = _G.selectedFireColor or "White"
+        
+        if selectedColor and fireColors[selectedColor] then
+            local colorData = fireColors[selectedColor]
+            local args = {[1] = colorData.id, [2] = colorData.code}
+            game:GetService("ReplicatedStorage").Remotes.ApplyEmmiter:InvokeServer(unpack(args))
+
+        end
+    end
+})
+
+
+SkinTab:AddDropdown({
+    Name = "الوان الدخان",
+    Description = "Select the Smoke Color",
+    Options = {"White", "Yellow", "Orange", "Green", "Blue", "Purple", "Red", "Black"},
+    Default = "White",
+    Callback = function(Value)
+        _G.selectedSmokeColor = Value
+
+    end
+})
+
+SkinTab:AddButton({
+    Name = "اختار لون دخان",
+    Callback = function()
+        local smokeColors = {
+            ["White"] = {id = "18637791748", code = "080SmokeWhite"},
+            ["Yellow"] = {id = "18637800482", code = "081SmokeYellow"},
+            ["Orange"] = {id = "18637793920", code = "082SmokeOrange"},
+            ["Green"] = {id = "18637789299", code = "083SmokeGreen"},
+            ["Blue"] = {id = "18637803021", code = "084SmokeBlue"},
+            ["Purple"] = {id = "18637813360", code = "085SmokePurple"},
+            ["Red"] = {id = "18637796598", code = "086SmokeRed"},
+            ["Black"] = {id = "18637798529", code = "087SmokeBlack"}
+        }
+        
+        local selectedColor = _G.selectedSmokeColor or "White"
+        
+        if selectedColor and smokeColors[selectedColor] then
+            local colorData = smokeColors[selectedColor]
+            local args = {[1] = colorData.id, [2] = colorData.code}
+            game:GetService("ReplicatedStorage").Remotes.ApplyEmmiter:InvokeServer(unpack(args))
+
+        end
+    end
+})
+
+SkinTab:AddSection({"احجام الاجسام."})
+
+if not _G.togglesInicializadas then
+    _G.togglesInicializadas = {}
+end
+
+
+SkinTab:AddToggle({
+    Name = "سكن صغير",
+    Default = false,
+    Callback = function(Value)
+        if not _G.togglesInicializadas["Small"] then
+            _G.togglesInicializadas["Small"] = true
+            return
+        end
+        
+        local customBody = {
+            [1] = 104157277410075,
+            [2] = 86280536086607,
+            [3] = 81974054542977,
+            [4] = 74524984742501,
+            [5] = 122626731952977,
+            [6] = 134082579
+        }
+        
+        if Value then
+            local args = {[1] = customBody}
+            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+        else
+            game:GetService("ReplicatedStorage").Remotes.ResetCharacterAppearance:FireServer()
+        end
+    end
+})
+
+
+SkinTab:AddToggle({
+    Name = "سكن عملاق",
+    Default = false,
+    Callback = function(Value)
+        if not _G.togglesInicializadas["Giant"] then
+            _G.togglesInicializadas["Giant"] = true
+            return
+        end
+        
+        local customBodyV2 = {
+            [1] = 17713016036,
+            [2] = 17713016151,
+            [3] = 17713015861,
+            [4] = 17713021340,
+            [5] = 17713016191,
+            [6] = 6340213
+        }
+        
+        if Value then
+            local args = {[1] = customBodyV2}
+            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+        else
+            game:GetService("ReplicatedStorage").Remotes.ResetCharacterAppearance:FireServer()
+        end
+    end
+})
+
+SkinTab:AddSection({"صفحة الاختفاء و نسخ السكنات"})
+
+SkinTab:AddButton({
+    Name = "الاختفاء",
+    Description = "محد بيقدر يشوفك لانك مختفي",
+    Callback = function()
+local s = {
+{"15312911732", "14532583477", "14532583469", "14532583517", "14532583483", "134082579"}
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack(s))
+    end
+})
+
     local FunTab     = Window:MakeTab({Title="🎮 المتعة",      Icon="gamepad2"})
     local FlingTab   = Window:MakeTab({Title="💥 الفلنق",     Icon="zap"})
-    local ProtectTab = Window:MakeTab({Title="🛡️ الحماية",    Icon="shield"})
+    local ProtectTab = Window:MakeTab({Title="🛡️ الحماية(جديد!)",    Icon="shield"})
     local KillTab    = Window:MakeTab({Title="☠️ القتل",      Icon="skull"})
     local MusicTab   = Window:MakeTab({Title="🎵 الأغاني",    Icon="music"})
     local TeleTab    = Window:MakeTab({Title="🌀 التنقل",     Icon="navigation"})
     local HackTab    = Window:MakeTab({Title="💻 الهاكات",    Icon="code"})
     local LocalTab   = Window:MakeTab({Title="🧑 اللاعب",     Icon="user"})
 
-    local LagServerTab = Window:MakeTab({Title="⚠️ لاق سيرفر", Icon="alert-triangle"})
-local CarTab = Window:MakeTab({Title="🚗 السيارات", Icon="car"})
+    local LagServerTab = Window:MakeTab({Title="⚠️ لاق سيرفر(جديد!)", Icon="alert-triangle"})
+local CarTab = Window:MakeTab({Title="🚗 السيارات(جديد!)", Icon="car"})
 
 
     
@@ -4475,13 +4888,13 @@ end)
         Callback=function()
             Window:Dialog({
                 Title="💚  FR HUB",
-                Text="مرحبا بك في السكربت الخاص ب المطورين FR\n\nصنع احمد و FR\n\nالرجاء استمتع بمشاهده الاسكربت 😍🫶🏻💕",
+                Text="مرحبا بك في السكربت الخاص ب المطورين FR\n\nصنع احمد  و فارس و FR\n\nالرجاء استمتع بمشاهده الاسكربت 😍🫶🏻💕",
                 Options={{"حسناً ✓"}}
             })
         end
     })
     InfoTab:AddSection("معلومات السكربت")
-    InfoTab:AddParagraph({"الإصدار","FR HUB v3.0  |  by احمد &  FR"})
+    InfoTab:AddParagraph({"الإصدار","FR HUB v4.0  |  by احمد و فارس&  FR"})
     InfoTab:AddSection("بطاقة اللاعب")
     local uid   = tostring(LocalPlayer.UserId)
     local uname = LocalPlayer.Name
@@ -4959,6 +5372,551 @@ end)
     ProtectTab:AddButton({Name="سكربت يقتل اللي يفعلون عليك",Callback=function()
         Notify("الحماية","جاري التحميل...",3); pcall(function() loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-FE-Fling-GUI-10927"))() end)
     end})
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+local backupTables = {
+    Vehicles = {},
+    Canoes = {},
+    Jets = {},
+    Helis = {},
+    Balls = {}
+}
+
+
+
+local function AntiFlingLoop(name, getFolderFunc)
+    local active = false
+    task.spawn(function()
+        while true do
+            if active and LocalPlayer.Character then
+                local folder = getFolderFunc()
+                if folder then
+                    for _, item in ipairs(folder:GetChildren()) do
+                        local isMine = false
+                        if name == "Vehicles" then
+                            for _, seat in ipairs(item:GetDescendants()) do
+                                if (seat:IsA("VehicleSeat") or seat:IsA("Seat")) and seat.Occupant and seat.Occupant.Parent == LocalPlayer.Character then
+                                    isMine = true
+                                    break
+                                end
+                            end
+                        elseif name == "Canoes" then
+                            local owner = item:FindFirstChild("Owner")
+                            isMine = owner and owner.Value == LocalPlayer
+                        elseif name == "Jets" or name == "Helis" then
+                            isMine = item.Name == LocalPlayer.Name
+                        end
+                        if not isMine then
+                            table.insert(backupTables[name], item:Clone())
+                            item:Destroy()
+                        end
+                    end
+                end
+            end
+            task.wait(0.03)
+        end
+    end)
+    return function(state)
+        active = state
+
+        if not state then
+            for _, item in ipairs(backupTables[name]) do
+                local parentFolder = getFolderFunc()
+                if parentFolder then item.Parent = parentFolder end
+            end
+            backupTables[name] = {}
+        end
+    end
+end
+
+
+ProtectTab:AddButton({
+    Name = "AntiBug",
+    Description = "حذف القلتشات",
+    Callback = function()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+
+local blacklist = {
+    {Name = "water", Class = "Part"},
+}
+
+
+local function neutralize(part)
+    if part and part:IsA("BasePart") then
+  
+        pcall(function()
+            part.Anchored = true
+            part.CanCollide = false
+            part.Massless = true
+            part.Transparency = 1
+            part:ClearAllChildren()
+        end)
+ 
+        pcall(function()
+            part:Destroy()
+        end)
+    end
+end
+
+
+workspace.DescendantAdded:Connect(function(obj)
+    for _, rule in ipairs(blacklist) do
+        if obj.Name == rule.Name and obj.ClassName == rule.Class then
+            neutralize(obj)
+        end
+    end
+end)
+
+
+for _, obj in ipairs(workspace:GetDescendants()) do
+    for _, rule in ipairs(blacklist) do
+        if obj.Name == rule.Name and obj.ClassName == rule.Class then
+            neutralize(obj)
+        end
+    end
+end
+
+
+task.spawn(function()
+    while task.wait(0.25) do
+        for _, rule in ipairs(blacklist) do
+            for _, v in next, getnilinstances() do
+                if v.Name == rule.Name and v.ClassName == rule.Class then
+                    neutralize(v)
+                end
+            end
+        end
+    end
+end)
+
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    local hum = char:WaitForChild("Humanoid")
+    hum.Touched:Connect(function(hit)
+        for _, rule in ipairs(blacklist) do
+            if hit.Name == rule.Name and hit.ClassName == rule.Class then
+                neutralize(hit)
+            end
+        end
+    end)
+end)
+    end
+})
+
+ProtectTab:AddButton({
+    Name = "Anti Som",
+    Description = "مانع الاصوات المزعجة",
+    Callback = function()
+
+
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+
+local allowedAudioIDs = {
+
+}
+
+
+local function isAllowedAudio(soundId)
+    if not soundId or soundId == "" then return true end
+    local id = tonumber(soundId:match("%d+"))
+    return id and table.find(allowedAudioIDs, id) or false
+end
+
+
+local function destroySound(sound)
+    if sound and sound.Parent then
+        sound:Stop()
+        sound.Volume = 0
+        sound.SoundId = ""
+        sound:Destroy()
+    end
+end
+
+
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("Sound") then
+   
+        if not isAllowedAudio(descendant.SoundId) then
+
+            destroySound(descendant)
+            return
+        end
+        
+
+        local connection
+        connection = descendant:GetPropertyChangedSignal("SoundId"):Connect(function()
+            if not isAllowedAudio(descendant.SoundId) then
+
+                destroySound(descendant)
+                if connection then connection:Disconnect() end
+            end
+        end)
+        
+
+        descendant.AncestryChanged:Connect(function()
+            if not descendant.Parent and connection then
+                connection:Disconnect()
+            end
+        end)
+    end
+end)
+
+
+local lastCleanup = 0
+local CLEANUP_INTERVAL = 2
+
+spawn(function()
+    while true do
+        local currentTime = tick()
+        if currentTime - lastCleanup >= CLEANUP_INTERVAL then
+            lastCleanup = currentTime
+            
+
+            local allSounds = {}
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Sound") then
+                    table.insert(allSounds, obj)
+                    if #allSounds >= 10 then break end 
+                end
+            end
+            
+            for _, sound in ipairs(allSounds) do
+                if not isAllowedAudio(sound.SoundId) then
+
+                    destroySound(sound)
+                end
+            end
+        end
+        
+        wait(0.5) 
+    end
+end)
+
+
+workspace.ChildAdded:Connect(function(child)
+    if child:IsA("Folder") and child.Name == "Audio all client" then
+
+        child:Destroy()
+    end
+end)
+
+
+local protectedEvents = {}
+local function protectRemoteEvent(remoteEvent)
+    if protectedEvents[remoteEvent] then return end
+    
+    protectedEvents[remoteEvent] = true
+
+    
+    remoteEvent.OnServerEvent:Connect(function(player, parent, audioId, volume)
+        if audioId and not isAllowedAudio(tostring(audioId)) then
+    
+            return 
+        end
+    end)
+end
+
+
+ReplicatedStorage.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("RemoteEvent") and descendant.Name == "1Gu1nSound1s" then
+        task.wait(0.1)
+        protectRemoteEvent(descendant)
+    end
+end)
+
+
+local existingEvent = ReplicatedStorage:FindFirstChild("1Gu1nSound1s", true)
+if existingEvent then
+    protectRemoteEvent(existingEvent)
+end
+
+
+    end
+})
+
+
+ProtectTab:AddToggle({
+    Name = "Anti flings",
+    Description = "الحمايه من سيارات",
+    Default = false,
+    Callback = AntiFlingLoop("Vehicles", function()
+        return Workspace:FindFirstChild("Vehicles")
+    end)
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti Canoe Fling",
+    Description = "الحماية القصوى",
+    Default = false,
+    Callback = AntiFlingLoop("Canoes", function()
+        local workspaceCom = Workspace:FindFirstChild("WorkspaceCom")
+        return workspaceCom and workspaceCom:FindFirstChild("001_CanoeStorage")
+    end)
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti Fling Jets",
+    Description = "حذف المزعجات",
+    Default = false,
+    Callback = AntiFlingLoop("Jets", function()
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        if folder and folder:FindFirstChild("001_Airport") then
+            local storage = folder["001_Airport"]:FindFirstChild("AirportHanger")
+            if storage then return storage:FindFirstChild("001_JetStorage") and storage["001_JetStorage"]:FindFirstChild("JetAirport") end
+        end
+    end)
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti Fling Helicopteros",
+    Description = "حذف الطيارات الي تخرب عليك",
+    Default = false,
+    Callback = AntiFlingLoop("Helis", function()
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        return folder and folder:FindFirstChild("001_HeliStorage") and folder["001_HeliStorage"]:FindFirstChild("PoliceStationHeli")
+    end)
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti Fling Ball",
+    Description = "حذف اي كره تخرب عليك",
+    Default = false,
+    Callback = AntiFlingLoop("Balls", function()
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        return folder and folder:FindFirstChild("001_SoccerBalls")
+    end)
+})
+
+
+local antiSitActive = false
+ProtectTab:AddToggle({
+    Name = "Anti Sit",
+    Description = "منع الجلوس",
+    Default = false,
+    Callback = function(state)
+        antiSitActive = state
+        TeleportCarro:MostrarNotificacao("Anti Sit "..(state and "ativado!" or "desativado!"))
+        task.spawn(function()
+            while antiSitActive and LocalPlayer.Character do
+                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                    if humanoid:GetState() == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    end
+                end
+                task.wait(0.05)
+            end
+            if not antiSitActive then
+                local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                end
+            end
+        end)
+    end
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti-Lag",
+    Description = "ازاله اللاق الخفيف",
+    Default = false,
+    Callback = function(state)
+        local Players = game:GetService("Players")
+        local dedupLock = {}
+        local IGNORED_PLAYER
+
+        if not state then return end
+
+        local function marcarIgnorado(player)
+            IGNORED_PLAYER = player
+        end
+
+        local function isTargetTool(inst)
+            return inst:IsA("Tool")
+        end
+
+        local function gatherTools(player)
+            local found = {}
+            local containers = {}
+            if player.Character then table.insert(containers, player.Character) end
+            local backpack = player:FindFirstChildOfClass("Backpack")
+            if backpack then table.insert(containers, backpack) end
+            local sg = player:FindFirstChild("StarterGear")
+            if sg then table.insert(containers, sg) end
+            for _, container in ipairs(containers) do
+                for _, child in ipairs(container:GetChildren()) do
+                    if isTargetTool(child) then table.insert(found, child) end
+                end
+            end
+            return found
+        end
+
+        local function dedupePlayer(player)
+            if player == IGNORED_PLAYER then return end
+            if dedupLock[player] then return end
+            dedupLock[player] = true
+            local tools = gatherTools(player)
+            if #tools > 1 then
+                for i = 2, #tools do pcall(function() tools[i]:Destroy() end) end
+            end
+            dedupLock[player] = false
+        end
+
+        local function hookPlayer(player)
+            if not IGNORED_PLAYER then marcarIgnorado(player) end
+            task.defer(dedupePlayer, player)
+            local function setupChar(char)
+                task.delay(0.5, function() dedupePlayer(player) end)
+                char.ChildAdded:Connect(function(child)
+                    if isTargetTool(child) then task.delay(0.1, function() dedupePlayer(player) end) end
+                end)
+            end
+            if player.Character then setupChar(player.Character) end
+            player.CharacterAdded:Connect(setupChar)
+            local backpack = player:WaitForChild("Backpack", 10)
+            if backpack then
+                backpack.ChildAdded:Connect(function(child)
+                    if isTargetTool(child) then task.delay(0.1, function() dedupePlayer(player) end) end
+                end)
+            end
+            local sg = player:FindFirstChild("StarterGear") or player:WaitForChild("StarterGear", 10)
+            if sg then
+                sg.ChildAdded:Connect(function(child)
+                    if isTargetTool(child) then task.delay(0.1, function() dedupePlayer(player) end) end
+                end)
+            end
+        end
+
+        Players.PlayerAdded:Connect(hookPlayer)
+        for _, plr in ipairs(Players:GetPlayers()) do hookPlayer(plr) end
+
+        task.spawn(function()
+            while state do
+                for _, plr in ipairs(Players:GetPlayers()) do dedupePlayer(plr) end
+                task.wait(2)
+            end
+        end)
+    end
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti Fling Portas",
+    Description = "الحمايه من المعقدات",
+    Default = false,
+    Callback = function(state)
+        if not _G.hiddenDoors then _G.hiddenDoors = {} end
+        if state then
+            _G.hiddenDoors = {}
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("BasePart") and obj.Name:lower():find("door") then
+                    local doorData = {
+                        door = obj,
+                        originalTransparency = obj.Transparency,
+                        originalCanCollide = obj.CanCollide,
+                        originalCastShadow = obj.CastShadow
+                    }
+                    obj.Transparency = 1
+                    obj.CanCollide = false
+                    obj.CastShadow = false
+                    for _, child in ipairs(obj:GetChildren()) do
+                        if child:IsA("BasePart") then
+                            child.Transparency = 1
+                            child.CanCollide = false
+                        elseif child:IsA("SurfaceGui") or child:IsA("BillboardGui") then
+                            child.Enabled = false
+                        end
+                    end
+                    table.insert(_G.hiddenDoors, doorData)
+                end
+            end
+
+        else
+            for _, doorData in ipairs(_G.hiddenDoors or {}) do
+                if doorData.door and doorData.door.Parent then
+                    doorData.door.Transparency = doorData.originalTransparency
+                    doorData.door.CanCollide = doorData.originalCanCollide
+                    doorData.door.CastShadow = doorData.originalCastShadow
+                    for _, child in ipairs(doorData.door:GetChildren()) do
+                        if child:IsA("BasePart") then
+                            child.Transparency = 0
+                            child.CanCollide = true
+                        elseif child:IsA("SurfaceGui") or child:IsA("BillboardGui") then
+                            child.Enabled = true
+                        end
+                    end
+                end
+            end
+
+            _G.hiddenDoors = {}
+        end
+    end
+})
+
+ProtectTab:AddToggle({
+    Name = "Anti Fling Bloco",
+    Description = "نسخة متقدمه",
+    Default = false,
+    Callback = function(state)
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        
+        if not _G.playerDoorData then 
+            _G.playerDoorData = {}
+        end
+        
+        local function findPlayerDoor()
+            local lotsFolder = workspace:FindFirstChild("001_Lots")
+            if not lotsFolder then 
+                return nil 
+            end
+            
+            for _, lot in pairs(lotsFolder:GetChildren()) do
+                if lot:FindFirstChild("HousePickedByPlayer") then
+                    local houseModel = lot.HousePickedByPlayer:FindFirstChild("HouseModel")
+                    if houseModel then
+                        local model = houseModel:FindFirstChild("Model")
+                        if model then
+                            local noLockDoor = model:FindFirstChild("NoLockHouseDoor")
+                            if noLockDoor then
+                                local door = noLockDoor:FindFirstChild("Door")
+                                if door then
+                                    return door, noLockDoor
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            
+            return nil
+        end
+        
+        if state then
+            local door, parent = findPlayerDoor()
+            if door then
+                _G.playerDoorData = {
+                    door = door,
+                    parent = parent,
+                    name = door.Name
+                }
+                door.Parent = nil
+            end
+        else
+            if _G.playerDoorData and _G.playerDoorData.door and _G.playerDoorData.parent then
+                _G.playerDoorData.door.Parent = _G.playerDoorData.parent
+                _G.playerDoorData = {}
+            end
+        end
+    end
+})
+
 
 
     local killTarget=nil
@@ -5254,24 +6212,116 @@ KillTab:AddButton({
             end
         end
     })
+    
+    LagServerTab:AddSection(" صفحة لاق عنطريق القنابل لتعليق السيرفر")
+    
+    LagServerTab:AddButton({
+     Name=" سكربت لاق عنطريق القنابل", 
+     Callback=function()
+     loadstring(game:HttpGet("https://raw.githubusercontent.com/ook314745-svg/Tj/refs/heads/main/Jt"))()
+     end})
 
     CarTab:AddSection("إعدادات التحكم بالسيارة")
     
-    CarTab:AddTextBox({
-        Name = "تعديل سرعة السيارة (0 - 200)",
-        Default = "",
-        PlaceholderText = "اكتب السرعة هنا...",
-        Callback = function(val)
-            local speedNum = tonumber(val)
-            local myCar = workspace.Vehicles:FindFirstChild(game.Players.LocalPlayer.Name .. "Car")
-            if myCar and speedNum and speedNum >= 0 and speedNum <= 500 then
-                myCar.Body.VehicleSeat.TopSpeed.Value = speedNum
-                Notify("السيارة", "تم تعديل السرعة إلى: " .. speedNum, 3)
-            else
-                Notify("خطأ", "يجب أن تكون راكب السيارة والسرعة بين 0 و 500!", 3)
+CarTab:AddSection({ "سرعه مجانا!" })
+
+local speedValue = 200
+local turboValue = 11.3
+
+local function getAllCars()
+    local cars = {}
+    if workspace.Vehicles then
+        for _, vehicle in pairs(workspace.Vehicles:GetChildren()) do
+            if vehicle:FindFirstChild("Seats") and vehicle.Seats:FindFirstChild("VehicleSeat") then
+                table.insert(cars, vehicle)
             end
         end
-    })
+    end
+    return cars
+end
+
+local function applyToAllCars(valueType, value)
+    local cars = getAllCars()
+    local carsModified = 0
+    
+    if #cars == 0 then
+        return
+    end
+    
+    for _, vehicle in pairs(cars) do
+        local vehicleSeat = vehicle.Seats.VehicleSeat
+        
+        local targetObj = vehicleSeat:FindFirstChild(valueType)
+        
+        if targetObj then
+            if targetObj:IsA("NumberValue") then
+                targetObj.Value = value
+                carsModified = carsModified + 1
+            elseif targetObj:IsA("IntValue") then
+                targetObj.Value = value
+                carsModified = carsModified + 1
+            elseif targetObj:IsA("StringValue") then
+                targetObj.Value = tostring(value)
+                carsModified = carsModified + 1
+            else
+                pcall(function()
+                    targetObj.Value = value
+                    carsModified = carsModified + 1
+                end)
+            end
+        else
+            local success = pcall(function()
+                if valueType == "MaxSpeed" then
+                    vehicleSeat.MaxSpeed = value
+                elseif valueType == "Turbo" then
+                    vehicleSeat.Turbo = value
+                end
+                carsModified = carsModified + 1
+            end)
+        end
+    end
+end
+
+CarTab:AddTextBox({
+    Name = "استخدام سرعه",
+    Description = "ادخل قيمة السرعه من 0 الى 200",
+    PlaceholderText = "200",
+    Callback = function(Value)
+        local numValue = tonumber(Value)
+        if numValue then
+            speedValue = numValue
+        end
+    end
+})
+
+CarTab:AddTextBox({
+    Name = "تفعيل تيربو",
+    Description = "دخل قيمه التيربو",
+    PlaceholderText = "11.3",
+    Callback = function(Value)
+        local numValue = tonumber(Value)
+        if numValue then
+            turboValue = numValue
+        end
+    end
+})
+
+CarTab:AddButton({
+    Name = "استخدام السرعه مجانا ",
+    Description = "يطبق سرعة علي جميع سيارات",
+    Callback = function()
+        applyToAllCars("MaxSpeed", speedValue)
+    end
+})
+
+CarTab:AddButton({
+    Name = "استخدام التيربو",
+    Description = "ملحوظه يتطبق في كل سيارات",
+    Callback = function()
+        applyToAllCars("Turbo", turboValue)
+    end
+})
+
 
     CarTab:AddSection("خصائص وإزعاج (تخريب السيارات)")
 
@@ -6565,3 +7615,4 @@ ShowIntro(function()
         end
     end)
 end)
+
